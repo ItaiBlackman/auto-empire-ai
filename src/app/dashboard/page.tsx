@@ -159,7 +159,7 @@ export default function DashboardPage() {
                   <TrendingUp size={24} className="text-gray-500 mb-4" />
                   <h3 className="font-bold mb-1">No businesses yet</h3>
                   <p className="text-sm text-gray-500 mb-6">Launch your first AI business to start making money.</p>
-                  <button onClick={() => setShowNewModal(true)} className="px-6 py-2 bg-white text-black rounded-full text-sm font-bold hover:bg-gray-200 transition-colors">Create Business</button>
+                  <button onClick={() => setShowNewModal(true)} className="px-6 py-2 bg-white text-black rounded-full text-sm font-bold hover:bg-gray-200 export const dynamic = 'force-dynamic';transition-colors">Create Business</button>
                 </div>
               )}
             </div>
