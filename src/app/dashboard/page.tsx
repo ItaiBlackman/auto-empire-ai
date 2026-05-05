@@ -50,7 +50,7 @@ export default function OverviewPage() {
   );
 
   const statCards = [
-    { label: "TOTAL REVENUE", value: `$${stats.revenue.toLocaleString()}`, change: "+100%", icon: <TrendingUp size={16} />, href: "/dashboard/businesses" },
+    { label: "TOTAL REVENUE", value: `$${stats.revenue.toLocaleString()}`, change: "+100%", icon: <TrendingUp size={16} />, href: "/dashboard/revenue" },
     { label: "ACTIVE BUSINESSES", value: stats.businesses, change: `+${stats.businesses}`, icon: <TrendingUp size={16} />, href: "/dashboard/businesses" },
     { label: "TOTAL LEADS", value: stats.leads, change: `+${stats.leads}`, icon: <Users size={16} />, href: "/dashboard/leads" },
     { label: "MESSAGES SENT", value: stats.messages.toLocaleString(), change: `+${stats.messages}`, icon: <MessageSquare size={16} />, href: "/dashboard/messages" },
