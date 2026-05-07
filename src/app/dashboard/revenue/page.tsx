@@ -35,12 +35,11 @@ export default function RevenuePage() {
   const totalRevenue = businesses.reduce((sum, b) => sum + parseRevenue(b.revenue), 0);
   const maxRevenue = Math.max(...businesses.map(b => parseRevenue(b.revenue)), 1);
 
-  // Build chart data — use history if available, otherwise show per-business bars
   const chartData = history.length > 0
     ? (() => {
         const grouped: Record<string, number> = {};
         history.forEach(h => {
-          const d = h.date?.slice(0, 7); // group by month YYYY-MM
+          const d = h.date?.slice(0, 7);
           if (d) grouped[d] = (grouped[d] || 0) + (h.amount || 0);
         });
         return Object.entries(grouped).map(([month, amount]) => ({ label: month, amount }));
@@ -65,7 +64,6 @@ export default function RevenuePage() {
           <p className="text-gray-500">Track earnings across all your AI businesses.</p>
         </div>
 
-        {/* Stat cards */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mb-10">
           {[
             { label: "Total Revenue", value: `$${totalRevenue.toLocaleString()}`, icon: <DollarSign size={18} />, color: "text-green-400" },
@@ -80,7 +78,6 @@ export default function RevenuePage() {
           ))}
         </div>
 
-        {/* Line / Bar graph */}
         <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] mb-6">
           <h2 className="font-bold mb-6 flex items-center gap-2">
             <BarChart3 size={16} /> {history.length > 0 ? "Revenue Over Time" : "Revenue by Business"}
@@ -88,58 +85,45 @@ export default function RevenuePage() {
           {chartData.length === 0 ? (
             <div className="text-center text-gray-500 py-12 text-sm">No data yet</div>
           ) : (
-            <>
-              {/* SVG line chart */}
-              <div className="w-full overflow-x-auto">
-                <svg viewBox={`0 0 ${Math.max(chartData.length * 80, 400)} 200`} className="w-full" style={{ minHeight: 200 }}>
-                  {/* Grid lines */}
-                  {[0, 0.25, 0.5, 0.75, 1].map((t, i) => (
-                    <line key={i} x1="40" y1={20 + (1 - t) * 140} x2={Math.max(chartData.length * 80, 400) - 20} y2={20 + (1 - t) * 140}
-                      stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
-                  ))}
-                  {/* Y axis labels */}
-                  {[0, 0.5, 1].map((t, i) => (
-                    <text key={i} x="35" y={20 + (1 - t) * 140 + 4} textAnchor="end" fontSize="9" fill="rgba(255,255,255,0.3)">
-                      ${(maxChart * t).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+            <div className="w-full overflow-x-auto">
+              <svg viewBox={`0 0 ${Math.max(chartData.length * 80, 400)} 200`} className="w-full" style={{ minHeight: 200 }}>
+                {[0, 0.25, 0.5, 0.75, 1].map((t, i) => (
+                  <line key={i} x1="40" y1={20 + (1 - t) * 140} x2={Math.max(chartData.length * 80, 400) - 20} y2={20 + (1 - t) * 140}
+                    stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+                ))}
+                {[0, 0.5, 1].map((t, i) => (
+                  <text key={i} x="35" y={20 + (1 - t) * 140 + 4} textAnchor="end" fontSize="9" fill="rgba(255,255,255,0.3)">
+                    ${(maxChart * t).toLocaleString(undefined, { maximumFractionDigits: 0 })}
+                  </text>
+                ))}
+                <defs>
+                  <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="#22c55e" stopOpacity="0.3" />
+                    <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
+                  </linearGradient>
+                </defs>
+                <path
+                  d={`M ${chartData.map((d, i) => `${40 + i * 80},${20 + (1 - d.amount / maxChart) * 140}`).join(" L ")} L ${40 + (chartData.length - 1) * 80} 160 L 40 160 Z`}
+                  fill="url(#areaGrad)" />
+                <polyline
+                  points={chartData.map((d, i) => `${40 + i * 80},${20 + (1 - d.amount / maxChart) * 140}`).join(" ")}
+                  fill="none" stroke="#22c55e" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round" />
+                {chartData.map((d, i) => (
+                  <g key={i}>
+                    <circle cx={40 + i * 80} cy={20 + (1 - d.amount / maxChart) * 140} r="4" fill="#22c55e" />
+                    <text x={40 + i * 80} y="190" textAnchor="middle" fontSize="9" fill="rgba(255,255,255,0.4)">
+                      {d.label.length > 8 ? d.label.slice(0, 8) + "…" : d.label}
                     </text>
-                  ))}
-                  {/* Area fill */}
-                  <defs>
-                    <linearGradient id="areaGrad" x1="0" y1="0" x2="0" y2="1">
-                      <stop offset="0%" stopColor="#22c55e" stopOpacity="0.3" />
-                      <stop offset="100%" stopColor="#22c55e" stopOpacity="0" />
-                    </linearGradient>
-                  </defs>
-                  <path
-                    d={`M ${chartData.map((d, i) => `${40 + i * 80},${20 + (1 - d.amount / maxChart) * 140}`).join(" L ")} L ${40 + (chartData.length - 1) * 80} 160 L 40 160 Z`}
-                    fill="url(#areaGrad)"
-                  />
-                  {/* Line */}
-                  <polyline
-                    points={chartData.map((d, i) => `${40 + i * 80},${20 + (1 - d.amount / maxChart) * 140}`).join(" ")}
-                    fill="none" stroke="#22c55e" strokeWidth="2" strokeLinejoin="round" strokeLinecap="round"
-                  />
-                  {/* Dots + labels */}
-                  {chartData.map((d, i) => (
-                    <g key={i}>
-                      <circle cx={40 + i * 80} cy={20 + (1 - d.amount / maxChart) * 140} r="4" fill="#22c55e" />
-                      <text x={40 + i * 80} y="190" textAnchor="middle" fontSize="9" fill="rgba(255,255,255,0.4)">
-                        {d.label.length > 8 ? d.label.slice(0, 8) + "…" : d.label}
-                      </text>
-                    </g>
-                  ))}
-                </svg>
-              </div>
-            </>
+                  </g>
+                ))}
+              </svg>
+            </div>
           )}
         </div>
 
-        {/* Business breakdown */}
         <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] mb-6">
           <h2 className="font-bold mb-6 flex items-center gap-2"><TrendingUp size={16} /> Revenue by Business</h2>
-          {businesses.length === 0 ? (
-            <div className="text-center text-gray-500 py-8 text-sm">No businesses yet</div>
-          ) : businesses.map((bus, i) => {
+          {businesses.map((bus, i) => {
             const rev = parseRevenue(bus.revenue);
             const pct = (rev / maxRevenue) * 100;
             return (
@@ -147,4 +131,52 @@ export default function RevenuePage() {
                 <div className="flex items-center justify-between mb-1.5">
                   <div className="flex items-center gap-2">
                     <span className="text-sm font-bold">{bus.name}</span>
-                    <span className={`text-[10px] uppercase font
+                    <span className={`text-[10px] uppercase font-black px-2 py-0.5 rounded-full ${bus.status === 'active' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+                      {bus.status === 'active' ? 'Running' : 'Creating'}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-1 text-green-400 font-bold text-sm">
+                    {bus.revenue || '$0'} <ArrowUpRight size={14} />
+                  </div>
+                </div>
+                <div className="h-2.5 rounded-full bg-white/5 overflow-hidden">
+                  <motion.div initial={{ width: 0 }} animate={{ width: `${pct}%` }} transition={{ delay: i * 0.06 + 0.2, duration: 0.6, ease: "easeOut" }}
+                    className="h-full rounded-full bg-gradient-to-r from-green-600 to-green-400" />
+                </div>
+              </motion.div>
+            );
+          })}
+        </div>
+
+        <div className="p-6 rounded-2xl border border-white/10 bg-white/[0.02]">
+          <h2 className="font-bold mb-4">Business Breakdown</h2>
+          <table className="w-full text-sm">
+            <thead>
+              <tr className="border-b border-white/10 text-left">
+                <th className="pb-3 text-xs text-gray-500 uppercase font-bold">Business</th>
+                <th className="pb-3 text-xs text-gray-500 uppercase font-bold">Status</th>
+                <th className="pb-3 text-xs text-gray-500 uppercase font-bold text-right">Leads</th>
+                <th className="pb-3 text-xs text-gray-500 uppercase font-bold text-right">Revenue</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-white/5">
+              {businesses.map(bus => (
+                <tr key={bus.id} onClick={() => router.push("/dashboard/businesses")}
+                  className="hover:bg-white/[0.02] transition-colors cursor-pointer">
+                  <td className="py-3 font-bold">{bus.name}</td>
+                  <td className="py-3">
+                    <span className={`text-[10px] uppercase font-black px-2 py-0.5 rounded-full ${bus.status === 'active' ? 'bg-green-500/10 text-green-500' : 'bg-yellow-500/10 text-yellow-500'}`}>
+                      {bus.status === 'active' ? 'Running' : 'Creating'}
+                    </span>
+                  </td>
+                  <td className="py-3 text-right text-gray-400">{bus.leads || 0}</td>
+                  <td className="py-3 text-right font-bold text-green-400">{bus.revenue || '$0'}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </Dashboard>
+  );
+}
