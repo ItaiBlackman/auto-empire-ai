@@ -88,10 +88,10 @@ const Dashboard = ({ children, profile }: { children?: React.ReactNode, profile?
             />
           </div>
           <div className="flex items-center gap-4">
-            <button className="p-2 hover:bg-white/5 rounded-full relative">
+            <button onClick={() => router.push("/dashboard/notifications")} className="p-2 hover:bg-white/5 rounded-full relative">
               <Bell size={20} className="text-gray-400" />
             </button>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-2 cursor-pointer" onClick={() => router.push("/dashboard/settings")}>
               <div className="w-8 h-8 rounded-full bg-gradient-to-tr from-gray-700 to-gray-500 border border-white/20 flex items-center justify-center text-xs font-bold">
                 {profile?.full_name?.charAt(0) || 'U'}
               </div>
