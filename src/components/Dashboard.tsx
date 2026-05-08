@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter, usePathname } from "next/navigation";
 import { 
-  LayoutDashboard, Users, MessageSquare, CheckSquare, TrendingUp, Settings, Search, Bell, LogOut
+  LayoutDashboard, Users, MessageSquare, CheckSquare, TrendingUp, Settings, Search, Bell, LogOut, Zap
 } from "lucide-react";
 
 const Dashboard = ({ children, profile }: { children?: React.ReactNode, profile?: any }) => {
