@@ -12,19 +12,6 @@ const STATUS_COLORS: Record<string, string> = {
   converted: "bg-green-500/10 text-green-400",
 };
 
-const ZAPIER_WEBHOOK = "https://hooks.zapier.com/hooks/catch/27543221/4y5sj8q/";
-
-async function triggerZapier(event: string, data: any) {
-  try {
-    await fetch(ZAPIER_WEBHOOK, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ event, source: "AutoEmpire AI", timestamp: new Date().toISOString(), data }),
-      mode: "no-cors",
-    });
-  } catch (e) {}
-}
-
 export default function LeadsPage() {
   const [leads, setLeads] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
@@ -33,37 +20,26 @@ export default function LeadsPage() {
 
   useEffect(() => {
     fetchLeads();
-    // Subscribe to new leads in realtime
-    const channel = supabase
-      .channel("leads-changes")
-      .on("postgres_changes", { event: "INSERT", schema: "public", table: "leads" }, async (payload) => {
-        const newLead = payload.new;
-        setLeads(prev => [newLead, ...prev]);
-        // Fire Zapier for new lead notification + welcome email
-        await triggerZapier("new_lead", {
-          lead_name: newLead.name,
-          lead_email: newLead.email,
-          lead_company: newLead.company,
-          business_id: newLead.business_id,
-          notification_email: "itaimanunited@gmail.com",
-          message: `New lead: ${newLead.name} just came in!`,
-        });
-      })
-      .subscribe();
-    return () => { supabase.removeChannel(channel); };
   }, []);
 
   const fetchLeads = async () => {
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) return;
-    const { data: businesses } = await supabase.from("businesses").select("id").eq("user_id", user.id);
+
+    const { data: businesses } = await supabase
+      .from("businesses")
+      .select("id")
+      .eq("user_id", user.id);
+
     if (!businesses?.length) { setLoading(false); return; }
+
     const ids = businesses.map(b => b.id);
     const { data } = await supabase
       .from("leads")
       .select("*, businesses(name)")
       .in("business_id", ids)
       .order("created_at", { ascending: false });
+
     setLeads(data || []);
     setLoading(false);
   };
@@ -90,8 +66,11 @@ export default function LeadsPage() {
         </div>
         <div className="flex gap-2">
           {["all", "new", "contacted", "qualified", "converted"].map(s => (
-            <button key={s} onClick={() => setFilter(s)}
-              className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize transition-colors ${filter === s ? 'bg-white text-black' : 'bg-white/5 text-gray-400 hover:text-white'}`}>
+            <button
+              key={s}
+              onClick={() => setFilter(s)}
+              className={`px-3 py-1.5 rounded-full text-xs font-bold capitalize transition-colors ${filter === s ? 'bg-white text-black' : 'bg-white/5 text-gray-400 hover:text-white'}`}
+            >
               {s}
             </button>
           ))}
@@ -117,8 +96,13 @@ export default function LeadsPage() {
             </thead>
             <tbody>
               {filtered.map((lead, i) => (
-                <motion.tr key={lead.id} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: i * 0.03 }}
-                  className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
+                <motion.tr
+                  key={lead.id}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: i * 0.03 }}
+                  className="border-b border-white/5 hover:bg-white/[0.02] transition-colors"
+                >
                   <td className="px-6 py-4">
                     <div className="flex items-center gap-3">
                       <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-xs font-bold">
@@ -137,8 +121,11 @@ export default function LeadsPage() {
                     <p className="text-xs text-gray-500">{lead.businesses?.name || '—'}</p>
                   </td>
                   <td className="px-6 py-4">
-                    <select value={lead.status} onChange={e => updateStatus(lead.id, e.target.value)}
-                      className={`text-xs font-bold px-3 py-1.5 rounded-full border-0 outline-none cursor-pointer ${STATUS_COLORS[lead.status] || 'bg-white/10 text-gray-400'} bg-opacity-100`}>
+                    <select
+                      value={lead.status}
+                      onChange={e => updateStatus(lead.id, e.target.value)}
+                      className={`text-xs font-bold px-3 py-1.5 rounded-full border-0 outline-none cursor-pointer ${STATUS_COLORS[lead.status] || 'bg-white/10 text-gray-400'} bg-opacity-100`}
+                    >
                       <option value="new">New</option>
                       <option value="contacted">Contacted</option>
                       <option value="qualified">Qualified</option>
