@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { Loader2, Mail, Check, ArrowRight, Zap } from "lucide-react";
 import { motion } from "framer-motion";
@@ -9,14 +9,13 @@ import Dashboard from "@/components/Dashboard";
 
 const VARIABLES = ["{{name}}", "{{company}}", "{{city}}", "{{business_name}}"];
 
-export default function EmailSetupPage() {
+function EmailSetupContent() {
   const [profile, setProfile] = useState<any>(null);
   const [business, setBusiness] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
   const [step, setStep] = useState(1);
-
   const [outreachSubject, setOutreachSubject] = useState("");
   const [outreachBody, setOutreachBody] = useState("");
   const [welcomeSubject, setWelcomeSubject] = useState("");
@@ -66,9 +65,7 @@ export default function EmailSetupPage() {
     }).eq("id", business.id);
     setSaving(false);
     setSaved(true);
-    setTimeout(() => {
-      router.push("/dashboard/businesses");
-    }, 1500);
+    setTimeout(() => router.push("/dashboard/businesses"), 1500);
   };
 
   const insertVariable = (variable: string, setter: (v: string) => void, current: string) => {
@@ -101,7 +98,6 @@ export default function EmailSetupPage() {
           </p>
         </div>
 
-        {/* Steps */}
         <div className="flex items-center gap-2 mb-8">
           {steps.map((s, i) => (
             <React.Fragment key={s.num}>
@@ -114,7 +110,6 @@ export default function EmailSetupPage() {
           ))}
         </div>
 
-        {/* Variable helpers */}
         <div className="flex gap-2 flex-wrap mb-6">
           <p className="text-xs text-gray-500 w-full mb-1">Click to insert a variable:</p>
           {VARIABLES.map(v => (
@@ -129,12 +124,11 @@ export default function EmailSetupPage() {
           ))}
         </div>
 
-        {/* Step 1 - Outreach */}
         {step === 1 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
             <div className="p-4 rounded-xl border border-orange-500/20 bg-orange-500/5 text-xs text-orange-400">
               <Zap size={12} className="inline mr-1" />
-              This email gets sent to cold prospects — businesses your AI finds that haven't heard of you yet.
+              This email gets sent to cold prospects your AI finds.
             </div>
             <div>
               <label className="text-xs text-gray-500 uppercase font-bold block mb-2">Subject Line</label>
@@ -153,12 +147,11 @@ export default function EmailSetupPage() {
           </motion.div>
         )}
 
-        {/* Step 2 - Welcome */}
         {step === 2 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
             <div className="p-4 rounded-xl border border-green-500/20 bg-green-500/5 text-xs text-green-400">
               <Check size={12} className="inline mr-1" />
-              This email gets sent immediately when a new lead is added to your dashboard.
+              This email gets sent immediately when a new lead is added.
             </div>
             <div>
               <label className="text-xs text-gray-500 uppercase font-bold block mb-2">Subject Line</label>
@@ -183,7 +176,6 @@ export default function EmailSetupPage() {
           </motion.div>
         )}
 
-        {/* Step 3 - Reminder */}
         {step === 3 && (
           <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="space-y-4">
             <div className="p-4 rounded-xl border border-blue-500/20 bg-blue-500/5 text-xs text-blue-400">
@@ -214,5 +206,17 @@ export default function EmailSetupPage() {
         )}
       </div>
     </Dashboard>
+  );
+}
+
+export default function EmailSetupPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-[80vh]">
+        <Loader2 className="animate-spin text-white/20" size={48} />
+      </div>
+    }>
+      <EmailSetupContent />
+    </Suspense>
   );
 }
