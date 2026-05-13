@@ -2,8 +2,9 @@
 
 import React, { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { TrendingUp, Plus, ChevronRight, Loader2, Bot, Zap } from "lucide-react";
+import { TrendingUp, ChevronRight, Loader2, Bot, Zap, Mail } from "lucide-react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/navigation";
 
 export default function BusinessesPage() {
   const [businesses, setBusinesses] = useState<any[]>([]);
@@ -12,6 +13,7 @@ export default function BusinessesPage() {
   const [tasks, setTasks] = useState<any[]>([]);
   const [activities, setActivities] = useState<any[]>([]);
   const supabase = createClient();
+  const router = useRouter();
 
   useEffect(() => {
     fetchBusinesses();
@@ -99,7 +101,6 @@ export default function BusinessesPage() {
         </div>
       )}
 
-      {/* Detail Modal */}
       {selected && (
         <motion.div
           initial={{ opacity: 0 }}
@@ -118,7 +119,14 @@ export default function BusinessesPage() {
                 <h2 className="text-2xl font-bold">{selected.name}</h2>
                 <p className="text-gray-400 text-sm mt-1">{selected.description}</p>
               </div>
-              <button onClick={() => setSelected(null)} className="text-gray-500 hover:text-white text-2xl leading-none">×</button>
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={() => router.push(`/dashboard/businesses/email-setup?business_id=${selected.id}`)}
+                  className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-sm font-bold hover:bg-white/10 transition-colors">
+                  <Mail size={14} /> Edit Emails
+                </button>
+                <button onClick={() => setSelected(null)} className="text-gray-500 hover:text-white text-2xl leading-none ml-2">×</button>
+              </div>
             </div>
 
             <div className="grid grid-cols-3 gap-4 mb-8">
