@@ -2,36 +2,35 @@
 
 import React, { useState, Suspense } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { Loader2, ArrowRight, Zap } from "lucide-react";
+import { Loader2, ChevronRight, Zap, Users, Globe, Mail, Rocket, BarChart } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 const BUSINESS_TYPES = [
-  { id: "website", name: "Website Builder", desc: "Build websites for local businesses using AI", icon: "🌐", category: "AUTOMATION" },
-  { id: "leadgen", name: "Lead Gen Agency", desc: "Automated B2B lead generation with AI outreach", icon: "👥", category: "SERVICE" },
-  { id: "content", name: "Content Studio", desc: "Multi-channel content creation and scheduling", icon: "✉️", category: "MARKETING" },
-  { id: "saas", name: "SaaS Outreach", desc: "Cold email and LinkedIn automation for startups", icon: "🚀", category: "SALES" },
-  { id: "dropship", name: "E-com Dropshipping", desc: "One-click store creation with trending products", icon: "⚡", category: "COMMERCE" },
-  { id: "support", name: "AI Support Team", desc: "24/7 intelligent customer support for any website", icon: "📊", category: "INFRASTRUCTURE" },
-  { id: "custom", name: "Custom Business", desc: "Build your own AI-powered business from scratch", icon: "✨", category: "CUSTOM" },
+  { id: "leadgen", name: "Lead Gen Agency", desc: "Automated B2B lead generation with AI-driven outreach and CRM integration.", icon: Users, category: "SERVICE" },
+  { id: "website", name: "Website Builder", desc: "Instant high-conversion landing pages for local businesses using AI.", icon: Globe, category: "AUTOMATION" },
+  { id: "content", name: "Content Studio", desc: "Multi-channel content creation and scheduling across all social platforms.", icon: Mail, category: "MARKETING" },
+  { id: "saas", name: "SaaS Outreach", desc: "Cold email and LinkedIn automation for software startups.", icon: Rocket, category: "SALES" },
+  { id: "dropship", name: "E-com Dropshipping", desc: "One-click store creation with trending product discovery and ads.", icon: Zap, category: "COMMERCE" },
+  { id: "support", name: "AI Support Team", desc: "24/7 intelligent customer support agents for any website.", icon: BarChart, category: "INFRASTRUCTURE" },
 ];
 
 function OnboardingContent() {
-  const [step, setStep] = useState(1);
   const [selected, setSelected] = useState<any>(null);
-  const [customName, setCustomName] = useState("");
-  const [customDesc, setCustomDesc] = useState("");
+  const [prompt, setPrompt] = useState("");
   const [loading, setLoading] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
-  const createBusiness = async () => {
+  const createBusiness = async (type?: any) => {
+    const business_type = type || selected;
+    if (!business_type && !prompt) return;
     setLoading(true);
     const { data: { user } } = await supabase.auth.getUser();
     if (!user) { router.push("/login"); return; }
 
-    const name = selected.id === "custom" ? customName : selected.name;
-    const desc = selected.id === "custom" ? customDesc : selected.desc;
+    const name = business_type ? business_type.name : prompt;
+    const desc = business_type ? business_type.desc : `AI-powered business: ${prompt}`;
 
     const { data: business } = await supabase.from("businesses").insert({
       user_id: user.id,
@@ -51,89 +50,103 @@ function OnboardingContent() {
   };
 
   return (
-    <div className="min-h-screen bg-black text-white">
-      <div className="max-w-4xl mx-auto px-6 py-16">
-        <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="text-center mb-12">
-          <div className="flex items-center justify-center gap-2 mb-6">
-            <div className="w-8 h-8 bg-white rounded-md flex items-center justify-center">
+    <div className="min-h-screen bg-black text-white selection:bg-white selection:text-black">
+      {/* Nav */}
+      <nav className="fixed top-0 w-full z-50 border-b border-white/10 bg-black/50 backdrop-blur-md">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+          <a href="/dashboard" className="text-xl font-bold tracking-tighter flex items-center gap-2 group">
+            <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center transition-transform group-hover:rotate-12">
               <div className="w-4 h-4 bg-black rotate-45" />
             </div>
-            <span className="text-xl font-bold">AutoEmpire</span>
-          </div>
-          <h1 className="text-4xl font-bold tracking-tight mb-3">
-            {step === 1 ? "What kind of business do you want to build?" : `Set up ${selected?.id === "custom" ? "your business" : selected?.name}`}
-          </h1>
-          <p className="text-gray-500">
-            {step === 1 ? "Choose a business type and our AI agents will run it for you automatically." : "Your AI agents will start finding leads and sending emails automatically."}
-          </p>
-        </motion.div>
+            AutoEmpire AI
+          </a>
+          <button onClick={() => router.push("/dashboard")} className="text-sm text-gray-400 hover:text-white transition-colors">
+            Back to Dashboard
+          </button>
+        </div>
+      </nav>
 
-        {step === 1 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {BUSINESS_TYPES.map((type, i) => (
-              <motion.button key={type.id} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.05 }}
-                onClick={() => { setSelected(type); setStep(2); }}
-                className="p-6 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] hover:border-white/20 transition-all text-left group">
-                <div className="text-3xl mb-4">{type.icon}</div>
-                <p className="text-xs text-gray-500 uppercase font-bold mb-2">{type.category}</p>
-                <h3 className="font-bold text-lg mb-2 group-hover:text-white transition-colors">{type.name}</h3>
-                <p className="text-sm text-gray-500">{type.desc}</p>
-              </motion.button>
-            ))}
-          </motion.div>
-        )}
+      {/* Hero */}
+      <section className="pt-32 pb-16 px-4 overflow-hidden">
+        <div className="max-w-7xl mx-auto text-center relative">
+          <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }}>
+            <span className="inline-block px-4 py-1 rounded-full border border-white/20 text-xs font-medium mb-6 bg-white/5">
+              Launch a New Business
+            </span>
+            <h1 className="text-5xl md:text-7xl font-bold tracking-tighter mb-6 bg-gradient-to-b from-white to-gray-500 bg-clip-text text-transparent">
+              What empire will you<br />build next?
+            </h1>
+            <p className="text-lg text-gray-400 max-w-2xl mx-auto mb-10">
+              Pick a business model below or describe your own. Your AI agents will handle everything automatically.
+            </p>
 
-        {step === 2 && selected && (
-          <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} className="max-w-lg mx-auto">
-            <div className="p-8 rounded-2xl border border-white/10 bg-white/[0.02] mb-6">
-              <div className="text-4xl mb-4">{selected.icon}</div>
-              <span className="text-xs text-gray-500 uppercase font-bold">{selected.category}</span>
-              <h2 className="text-2xl font-bold mt-1 mb-2">{selected.id === "custom" ? "Custom Business" : selected.name}</h2>
-
-              {selected.id === "custom" ? (
-                <div className="space-y-4 mt-4">
-                  <div>
-                    <label className="text-xs text-gray-500 uppercase font-bold block mb-2">Business Name</label>
-                    <input value={customName} onChange={e => setCustomName(e.target.value)}
-                      placeholder="e.g. My Marketing Agency"
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white/30 transition-colors" />
-                  </div>
-                  <div>
-                    <label className="text-xs text-gray-500 uppercase font-bold block mb-2">What does it do?</label>
-                    <textarea value={customDesc} onChange={e => setCustomDesc(e.target.value)}
-                      placeholder="Describe what your business does..."
-                      rows={3}
-                      className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white/30 transition-colors resize-none" />
-                  </div>
-                </div>
-              ) : (
-                <p className="text-gray-400 mt-2">{selected.desc}</p>
-              )}
-
-              <div className="mt-6 p-4 rounded-xl bg-white/5 border border-white/10">
-                <p className="text-xs text-gray-500 uppercase font-bold mb-2 flex items-center gap-2"><Zap size={12} /> What happens next</p>
-                <ul className="space-y-1 text-sm text-gray-400">
-                  <li>✅ Write your custom email templates</li>
-                  <li>✅ AI agents start finding leads across Israel</li>
-                  <li>✅ Emails send automatically to every lead</li>
-                  <li>✅ You get notified for every response</li>
-                </ul>
+            {/* Prompt input */}
+            <div className="max-w-2xl mx-auto mb-16 relative group">
+              <div className="absolute -inset-1 bg-gradient-to-r from-white/20 to-white/0 rounded-2xl blur opacity-25 group-focus-within:opacity-100 transition-opacity" />
+              <div className="relative flex items-center bg-white/5 border border-white/10 rounded-2xl p-2 backdrop-blur-xl focus-within:border-white/30 transition-colors">
+                <Zap className="ml-4 text-gray-500 shrink-0" size={20} />
+                <input
+                  type="text"
+                  value={prompt}
+                  onChange={e => setPrompt(e.target.value)}
+                  onKeyDown={e => e.key === "Enter" && createBusiness()}
+                  placeholder="e.g. Build me a social media agency for restaurants in Tel Aviv"
+                  className="flex-1 bg-transparent border-none focus:ring-0 text-white px-4 py-3 placeholder:text-gray-600 outline-none"
+                />
+                <button
+                  onClick={() => createBusiness()}
+                  disabled={loading || !prompt}
+                  className="px-6 py-3 bg-white text-black rounded-xl font-bold hover:bg-gray-200 transition-all flex items-center gap-2 shrink-0 disabled:opacity-50"
+                >
+                  {loading ? <Loader2 size={18} className="animate-spin" /> : <>Launch Now <ChevronRight size={18} /></>}
+                </button>
               </div>
             </div>
-
-            <div className="flex gap-3">
-              <button onClick={() => setStep(1)}
-                className="flex-1 py-3 border border-white/10 font-bold rounded-xl hover:bg-white/5 transition-colors">
-                Back
-              </button>
-              <button onClick={createBusiness} disabled={loading || (selected.id === "custom" && (!customName || !customDesc))}
-                className="flex-1 py-3 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 disabled:opacity-40">
-                {loading ? <Loader2 size={16} className="animate-spin" /> : <><ArrowRight size={16} /> Create & Set Up Emails</>}
-              </button>
-            </div>
           </motion.div>
-        )}
-      </div>
+
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-white/10 blur-[120px] rounded-full -z-10" />
+        </div>
+      </section>
+
+      {/* Business type grid */}
+      <section className="pb-24 px-4 border-t border-white/5">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex flex-col md:flex-row items-end justify-between mb-12 gap-4 pt-16">
+            <div>
+              <h2 className="text-3xl font-bold tracking-tight mb-2">Or choose a template</h2>
+              <p className="text-gray-400">Ready-made AI business models you can launch instantly.</p>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {BUSINESS_TYPES.map((type, i) => {
+              const Icon = type.icon;
+              return (
+                <motion.div
+                  key={type.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: i * 0.07 }}
+                  onClick={() => createBusiness(type)}
+                  className="group p-6 rounded-2xl border border-white/10 bg-white/5 hover:border-white/30 transition-all cursor-pointer"
+                >
+                  <div className="w-12 h-12 rounded-xl bg-white/10 flex items-center justify-center mb-6 group-hover:bg-white group-hover:text-black transition-colors">
+                    <Icon size={24} />
+                  </div>
+                  <h3 className="text-xl font-bold mb-2">{type.name}</h3>
+                  <p className="text-gray-400 text-sm mb-6 leading-relaxed">{type.desc}</p>
+                  <div className="flex items-center justify-between">
+                    <span className="text-xs font-mono text-gray-500 uppercase tracking-widest">{type.category}</span>
+                    <div className="px-4 py-1.5 rounded-full bg-white/10 text-xs font-bold group-hover:bg-white group-hover:text-black transition-all opacity-0 group-hover:opacity-100 flex items-center gap-1">
+                      {loading ? <Loader2 size={12} className="animate-spin" /> : "Launch"} <ChevronRight size={12} />
+                    </div>
+                  </div>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
     </div>
   );
 }
