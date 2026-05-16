@@ -473,7 +473,7 @@ const LandingPage = () => {
                 <li><a href="#marketplace" className="hover:text-white transition-colors">Marketplace</a></li>
                 <li><a href="#features" className="hover:text-white transition-colors">AI Employees</a></li>
                 <li><a href="#pricing" className="hover:text-white transition-colors">Pricing</a></li>
-                <li><a href="#" className="hover:text-white transition-colors">Changelog</a></li>
+                <li><a href="/changelog" className="hover:text-white transition-colors">Changelog</a></li>
               </ul>
             </div>
             <div>
