@@ -488,10 +488,10 @@ const LandingPage = () => {
             <div>
               <h4 className="text-white font-bold mb-6 text-sm uppercase tracking-widest">Support</h4>
               <ul className="space-y-4 text-sm text-gray-500">
-                <li><a href="/help" className="hover:text-white transition-colors">Help Center</a></li>
-                <li><a href="/contact" className="hover:text-white transition-colors">Contact Us</a></li>
-                <li><a href="/status" className="hover:text-white transition-colors">Status</a></li>
-                <li><a href="/api-docs" className="hover:text-white transition-colors">API Docs</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Help Center</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Contact Us</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">Status</a></li>
+                <li><a href="#" className="hover:text-white transition-colors">API Docs</a></li>
               </ul>
             </div>
           </div>
