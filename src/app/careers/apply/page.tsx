@@ -20,15 +20,11 @@ function ApplyContent() {
   const handleSubmit = async () => {
     if (!name || !email || !why) return;
     setSending(true);
-
-    // Send via mailto
-    const subject = encodeURIComponent(`Job Application — ${role} — ${name}`);
-    const body = encodeURIComponent(
-      `Name: ${name}\nEmail: ${email}\nLinkedIn: ${linkedin || "Not provided"}\n\nWhy I want to join AutoEmpire:\n${why}`
-    );
-    window.open(`mailto:autoempire.ai123@gmail.com?subject=${subject}&body=${body}`);
-
-    await new Promise(r => setTimeout(r, 1000));
+    await fetch("/api/apply", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, linkedin, why, role }),
+    });
     setSending(false);
     setSent(true);
   };
@@ -101,7 +97,7 @@ function ApplyContent() {
               <Upload size={16} className="text-gray-500 shrink-0" />
               <div>
                 <p className="text-sm font-bold">Attach your CV</p>
-                <p className="text-xs text-gray-500">After clicking Apply, attach your CV to the email that opens.</p>
+                <p className="text-xs text-gray-500">Email your CV to autoempire.ai123@gmail.com with your name and role in the subject.</p>
               </div>
             </div>
             <button onClick={handleSubmit} disabled={sending || !name || !email || !why}
