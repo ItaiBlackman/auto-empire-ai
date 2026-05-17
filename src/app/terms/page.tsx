@@ -72,7 +72,7 @@ export default function TermsPage() {
             },
             {
               title: "11. Contact",
-              content: `For questions about these Terms of Service, contact us at:\n\nAutoEmpire AI Inc.\nEmail: legal@autoempire.ai`
+              content: `For questions about these Terms of Service, contact us at:\n\nAutoEmpire AI Inc.\nEmail: autoempire.ai123@gmail.com`
             },
           ].map((section, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}

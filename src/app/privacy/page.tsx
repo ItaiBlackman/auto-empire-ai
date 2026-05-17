@@ -56,7 +56,7 @@ export default function PrivacyPage() {
             },
             {
               title: "7. Your Rights",
-              content: `You have the right to:\n\n• Access the personal information we hold about you\n• Correct inaccurate personal information\n• Request deletion of your personal information\n• Object to processing of your personal information\n• Data portability\n\nTo exercise any of these rights, contact us at privacy@autoempire.ai`
+              content: `You have the right to:\n\n• Access the personal information we hold about you\n• Correct inaccurate personal information\n• Request deletion of your personal information\n• Object to processing of your personal information\n• Data portability\n\nTo exercise any of these rights, contact us at autoempire.ai123@gmail.com`
             },
             {
               title: "8. Children's Privacy",
@@ -68,7 +68,7 @@ export default function PrivacyPage() {
             },
             {
               title: "10. Contact Us",
-              content: `If you have any questions about this Privacy Policy, please contact us at:\n\nAutoEmpire AI Inc.\nEmail: privacy@autoempire.ai`
+              content: `If you have any questions about this Privacy Policy, please contact us at:\n\nAutoEmpire AI Inc.\nEmail: autoempire.ai123@gmail.com`
             },
           ].map((section, i) => (
             <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.03 }}

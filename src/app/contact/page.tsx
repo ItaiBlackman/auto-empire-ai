@@ -49,7 +49,7 @@ export default function ContactPage() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
           {[
-            { icon: <Mail size={20} />, title: "Email Support", desc: "support@autoempire.ai", sub: "Response within 24 hours" },
+            { icon: <Mail size={20} />, title: "Email Support", desc: "autoempire.ai123@gmail.com", sub: "Response within 24 hours" },
             { icon: <MessageSquare size={20} />, title: "Live Chat", desc: "Available in dashboard", sub: "Monday to Friday, 9am–6pm" },
             { icon: <Zap size={20} />, title: "Help Center", desc: "Browse all articles", sub: "Instant answers to common questions", link: "/help" },
           ].map((item, i) => (
