@@ -42,7 +42,6 @@ export default function CareersPage() {
           </p>
         </motion.div>
 
-        {/* Why join */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12">
           {[
@@ -59,7 +58,6 @@ export default function CareersPage() {
           ))}
         </motion.div>
 
-        {/* Open roles */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.2 }}>
           <h2 className="text-2xl font-bold mb-6">Open Roles</h2>
           <div className="space-y-4">
@@ -75,10 +73,11 @@ export default function CareersPage() {
                       <span className="text-xs px-2 py-0.5 rounded-full bg-white/5 text-gray-400">{role.type}</span>
                     </div>
                   </div>
-                  <a href={`/careers/apply?role=${encodeURIComponent(role.title)}`}
+                  <button
+                    onClick={() => router.push(`/careers/apply?role=${encodeURIComponent(role.title)}`)}
                     className="px-4 py-2 bg-white text-black text-xs font-bold rounded-xl hover:bg-gray-200 transition-colors opacity-0 group-hover:opacity-100">
                     Apply
-                  </a>
+                  </button>
                 </div>
                 <p className="text-sm text-gray-400">{role.desc}</p>
               </motion.div>
@@ -86,15 +85,15 @@ export default function CareersPage() {
           </div>
         </motion.div>
 
-        {/* CTA */}
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.4 }}
           className="mt-12 text-center p-12 rounded-3xl border border-white/10 bg-white/[0.02]">
           <h2 className="text-2xl font-bold mb-3">Don't see your role?</h2>
           <p className="text-gray-400 mb-6">We're always looking for exceptional people. Send us your CV and tell us how you'd contribute.</p>
-          <a href={`/careers/apply?role=${encodeURIComponent(role.title)}`}
+          <button
+            onClick={() => router.push("/careers/apply?role=General Application")}
             className="inline-block px-8 py-4 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all hover:scale-105">
             Send us your CV
-          </a>
+          </button>
         </motion.div>
       </div>
 
@@ -103,6 +102,6 @@ export default function CareersPage() {
           © 2026 AutoEmpire AI. Inc. All rights reserved.
         </div>
       </footer>
-    </dhiv>
+    </div>
   );
 }
