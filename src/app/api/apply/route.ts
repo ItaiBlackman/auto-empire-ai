@@ -3,7 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 const RESEND_API_KEY = "re_dv9CbBi4_GBVnVJ9oPKi19Ygntg5GBjRR";
 
 export async function POST(req: NextRequest) {
-  const { name, email, linkedin, why, role } = await req.json();
+  const { name, email, linkedin, why, role, cvUrl } = await req.json();
 
   await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -15,7 +15,7 @@ export async function POST(req: NextRequest) {
       from: "AutoEmpire AI <onboarding@resend.dev>",
       to: ["autoempire.ai123@gmail.com"],
       subject: `New Application — ${role} — ${name}`,
-      text: `New job application received!\n\nRole: ${role}\nName: ${name}\nEmail: ${email}\nLinkedIn: ${linkedin || "Not provided"}\n\nWhy they want to join:\n${why}`,
+      text: `New job application received!\n\nRole: ${role}\nName: ${name}\nEmail: ${email}\nLinkedIn: ${linkedin || "Not provided"}\nCV: ${cvUrl || "Not uploaded"}\n\nWhy they want to join:\n${why}`,
     }),
   });
 

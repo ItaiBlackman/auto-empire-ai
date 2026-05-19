@@ -3,30 +3,68 @@
 import React, { useState, Suspense } from "react";
 import { motion } from "framer-motion";
 import { useRouter, useSearchParams } from "next/navigation";
-import { Loader2, Check, Upload, ArrowLeft } from "lucide-react";
+import { Loader2, Check, Upload, ArrowLeft, File, X } from "lucide-react";
+import { createClient } from "@/utils/supabase/client";
 
 function ApplyContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const role = searchParams.get("role") || "Open Position";
+  const supabase = createClient();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [linkedin, setLinkedin] = useState("");
   const [why, setWhy] = useState("");
+  const [cvFile, setCvFile] = useState<File | null>(null);
   const [sending, setSending] = useState(false);
   const [sent, setSent] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      if (file.size > 10 * 1024 * 1024) {
+        setError("File must be under 10MB");
+        return;
+      }
+      setCvFile(file);
+      setError("");
+    }
+  };
 
   const handleSubmit = async () => {
     if (!name || !email || !why) return;
     setSending(true);
-    await fetch("/api/apply", {
+    setError("");
+
+    let cvUrl = "";
+
+    // Upload CV to Supabase Storage
+    if (cvFile) {
+      const fileName = `${Date.now()}_${name.replace(/\s/g, "_")}_${cvFile.name}`;
+      const { data, error: uploadError } = await supabase.storage
+        .from("cvs")
+        .upload(fileName, cvFile);
+      if (!uploadError && data) {
+        const { data: urlData } = supabase.storage.from("cvs").getPublicUrl(fileName);
+        cvUrl = urlData?.publicUrl || "";
+      }
+    }
+
+    // Send email via API
+    const res = await fetch("/api/apply", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, linkedin, why, role }),
+      body: JSON.stringify({ name, email, linkedin, why, role, cvUrl }),
     });
+
     setSending(false);
-    setSent(true);
+    if (res.ok) {
+      setSent(true);
+    } else {
+      setError("Something went wrong. Please try again.");
+    }
   };
 
   return (
@@ -93,13 +131,30 @@ function ApplyContent() {
                 rows={6}
                 className="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm outline-none focus:border-white/30 transition-colors resize-none" />
             </div>
-            <div className="p-4 rounded-xl border border-white/10 bg-white/5 flex items-center gap-3">
-              <Upload size={16} className="text-gray-500 shrink-0" />
-              <div>
-                <p className="text-sm font-bold">Attach your CV</p>
-                <p className="text-xs text-gray-500">Email your CV to autoempire.ai123@gmail.com with your name and role in the subject.</p>
-              </div>
+
+            {/* CV Upload */}
+            <div>
+              <label className="text-xs text-gray-500 uppercase font-bold block mb-2">Upload CV</label>
+              {cvFile ? (
+                <div className="flex items-center gap-3 p-4 rounded-xl border border-green-500/30 bg-green-500/5">
+                  <File size={16} className="text-green-400 shrink-0" />
+                  <p className="text-sm text-green-400 flex-1 truncate">{cvFile.name}</p>
+                  <button onClick={() => setCvFile(null)}>
+                    <X size={16} className="text-gray-500 hover:text-white transition-colors" />
+                  </button>
+                </div>
+              ) : (
+                <label className="flex flex-col items-center justify-center p-8 rounded-xl border border-dashed border-white/20 bg-white/[0.02] hover:bg-white/[0.05] cursor-pointer transition-colors">
+                  <Upload size={24} className="text-gray-500 mb-2" />
+                  <p className="text-sm font-bold mb-1">Click to upload your CV</p>
+                  <p className="text-xs text-gray-500">PDF, DOC, DOCX up to 10MB</p>
+                  <input type="file" accept=".pdf,.doc,.docx" onChange={handleFile} className="hidden" />
+                </label>
+              )}
             </div>
+
+            {error && <p className="text-sm text-red-400">{error}</p>}
+
             <button onClick={handleSubmit} disabled={sending || !name || !email || !why}
               className="w-full py-4 bg-white text-black font-bold rounded-xl hover:bg-gray-200 transition-colors flex items-center justify-center gap-2 disabled:opacity-40">
               {sending ? <><Loader2 size={16} className="animate-spin" /> Sending...</> : "Apply Now"}
