@@ -17,9 +17,18 @@ export default function ContactPage() {
   const handleSubmit = async () => {
     if (!name || !email || !message) return;
     setSending(true);
-    await new Promise(r => setTimeout(r, 1500));
+    try {
+      await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, subject, message }),
+      });
+      setSent(true);
+    } catch (error) {
+      console.error("Failed to send message:", error);
+      alert("Failed to send message. Please try again later.");
+    }
     setSending(false);
-    setSent(true);
   };
 
   return (

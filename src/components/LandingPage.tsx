@@ -235,7 +235,7 @@ const LandingPage = () => {
               <h2 className="text-4xl font-bold tracking-tight mb-4">Marketplace</h2>
               <p className="text-gray-400">Choose a ready-made business model and launch instantly.</p>
             </div>
-            <button className="text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all">
+            <button onClick={() => router.push("/templates")} className="text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all">
               View all templates <ChevronRight size={16} />
             </button>
           </div>
@@ -544,60 +544,6 @@ const templates = [
     description: "24/7 intelligent customer support agents for any website.",
     icon: <BarChart3 size={24} />,
     type: "Infrastructure"
-  },
-  {
-    title: "SEO Authority",
-    description: "Automated backlink building and keyword-optimized content clusters.",
-    icon: <Search size={24} />,
-    type: "Marketing"
-  },
-  {
-    title: "Video Ads Agency",
-    description: "AI-generated video scripts and production for high-ROAS social ads.",
-    icon: <Play size={24} />,
-    type: "Creative"
-  },
-  {
-    title: "Newsletter Empire",
-    description: "Curation and growth automation for niche-specific premium newsletters.",
-    icon: <Mail size={24} />,
-    type: "Media"
-  },
-  {
-    title: "LinkedIn Ghostwriting",
-    description: "Authority-building personal brand management for executives via AI.",
-    icon: <Users size={24} />,
-    type: "Service"
-  },
-  {
-    title: "Amazon FBA Bot",
-    description: "Inventory management and review automation for e-commerce sellers.",
-    icon: <Zap size={24} />,
-    type: "Commerce"
-  },
-  {
-    title: "Real Estate Leads",
-    description: "Automated property valuation and lead qualification for realtors.",
-    icon: <Globe size={24} />,
-    type: "Sales"
-  },
-  {
-    title: "App Development",
-    description: "No-code app generation and deployment for small businesses.",
-    icon: <Rocket size={24} />,
-    type: "Tech"
-  },
-  {
-    title: "Influencer Matcher",
-    description: "AI-powered brand-to-influencer matchmaking and campaign tracking.",
-    icon: <Star size={24} />,
-    type: "Marketing"
-  },
-  {
-    title: "Legal Document Bot",
-    description: "Automated contract generation and review for startups and SMEs.",
-    icon: <Shield size={24} />,
-    type: "Legal"
   }
 ];
 

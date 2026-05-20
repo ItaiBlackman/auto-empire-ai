@@ -2,7 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { Loader2, ChevronRight, Zap, Users, Globe, Mail, Rocket, BarChart, Search, Play, Star, Shield } from "lucide-react";
+import { Loader2, ChevronRight, Zap, Users, Globe, Mail, Rocket, BarChart, TrendingUp, Home, Youtube, Layout, Gamepad2, UserPlus, ShieldCheck, FileText, Music } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -13,15 +13,15 @@ const BUSINESS_TYPES = [
   { id: "saas", name: "SaaS Outreach", desc: "Cold email and LinkedIn automation for software startups.", icon: Rocket, category: "SALES" },
   { id: "dropship", name: "E-com Dropshipping", desc: "One-click store creation with trending product discovery and ads.", icon: Zap, category: "COMMERCE" },
   { id: "support", name: "AI Support Team", desc: "24/7 intelligent customer support agents for any website.", icon: BarChart, category: "INFRASTRUCTURE" },
-  { id: "seo", name: "SEO Authority", desc: "Automated backlink building and keyword-optimized content clusters.", icon: Search, category: "MARKETING" },
-  { id: "video", name: "Video Ads Agency", desc: "AI-generated video scripts and production for high-ROAS social ads.", icon: Play, category: "CREATIVE" },
-  { id: "newsletter", name: "Newsletter Empire", desc: "Curation and growth automation for niche-specific premium newsletters.", icon: Mail, category: "MEDIA" },
-  { id: "linkedin", name: "LinkedIn Ghostwriting", desc: "Authority-building personal brand management for executives via AI.", icon: Users, category: "SERVICE" },
-  { id: "amazon", name: "Amazon FBA Bot", desc: "Inventory management and review automation for e-commerce sellers.", icon: Zap, category: "COMMERCE" },
-  { id: "realestate", name: "Real Estate Leads", desc: "Automated property valuation and lead qualification for realtors.", icon: Globe, category: "SALES" },
-  { id: "appdev", name: "App Development", desc: "No-code app generation and deployment for small businesses.", icon: Rocket, category: "TECH" },
-  { id: "influencer", name: "Influencer Matcher", desc: "AI-powered brand-to-influencer matchmaking and campaign tracking.", icon: Star, category: "MARKETING" },
-  { id: "legal", name: "Legal Document Bot", desc: "Automated contract generation and review for startups and SMEs.", icon: Shield, category: "LEGAL" },
+  { id: "hedgefund", name: "AI Hedge Fund", desc: "Fully autonomous AI that buys/sells stocks, ETFs, and options based on market analysis.", icon: TrendingUp, category: "FINANCE" },
+  { id: "realestate", name: "AI Real Estate Acquirer", desc: "AI finds undervalued homes, Airbnb properties, or rental opportunities automatically.", icon: Home, category: "REAL ESTATE" },
+  { id: "youtube", name: "AI YouTube Network", desc: "AI runs dozens of faceless channels with automated video production.", icon: Youtube, category: "CONTENT" },
+  { id: "appfactory", name: "AI App Factory", desc: "AI launches small SaaS/mobile apps continuously.", icon: Layout, category: "SOFTWARE" },
+  { id: "gamestudio", name: "AI Game Studio", desc: "AI creates mobile/Steam games, updates them, and monetizes with ads or purchases.", icon: Gamepad2, category: "GAMING" },
+  { id: "recruiting", name: "AI Recruiting Company", desc: "AI matches employers with candidates and automates hiring.", icon: UserPlus, category: "HR" },
+  { id: "cybersecurity", name: "AI Cybersecurity Scanner", desc: "AI scans websites/businesses for vulnerabilities and sells protection monitoring.", icon: ShieldCheck, category: "SECURITY" },
+  { id: "legal", name: "AI Legal Document Company", desc: "AI creates contracts, agreements, business documents, and compliance paperwork.", icon: FileText, category: "LEGAL" },
+  { id: "music", name: "AI Music Label", desc: "AI creates songs, artists, beats, albums, and distributes them to Spotify/Apple Music.", icon: Music, category: "ENTERTAINMENT" },
 ];
 
 function OnboardingContent() {
