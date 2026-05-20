@@ -17,7 +17,7 @@ export default function AboutPage() {
             <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center transition-transform group-hover:rotate-12">
               <div className="w-4 h-4 bg-black rotate-45" />
             </div>
-            autoempire.ai123@gmail.com
+            AutoEmpire AI
           </a>
           <button onClick={() => router.push("/")} className="text-sm text-gray-400 hover:text-white transition-colors">
             Back to Home
@@ -33,7 +33,7 @@ export default function AboutPage() {
             We're building the future of business.
           </h1>
           <p className="text-lg text-gray-400 max-w-2xl mx-auto">
-            autoempire.ai123@gmail.com was founded on one belief — anyone should be able to build and run a successful business, regardless of their experience, budget, or time.
+            AutoEmpire AI was founded on one belief — anyone should be able to build and run a successful business, regardless of their experience, budget, or time.
           </p>
         </motion.div>
 
@@ -42,13 +42,13 @@ export default function AboutPage() {
           className="p-8 rounded-3xl border border-white/10 bg-white/[0.02] mb-8">
           <h2 className="text-2xl font-bold mb-4">How it started</h2>
           <p className="text-gray-400 leading-relaxed mb-4">
-            autoempire.ai123@gmail.com was built by Itai Blackman, a young entrepreneur who wanted to build multiple businesses simultaneously but kept running into the same problem — not enough time, not enough people, and too much manual work.
+            AutoEmpire AI was built by Itai Blackman, a young entrepreneur who wanted to build multiple businesses simultaneously but kept running into the same problem — not enough time, not enough people, and too much manual work.
           </p>
           <p className="text-gray-400 leading-relaxed mb-4">
             The vision was simple: what if AI could run entire businesses on autopilot? Not just answer emails or write content — but actually find leads, send outreach, follow up, and generate revenue around the clock, with zero manual input.
           </p>
           <p className="text-gray-400 leading-relaxed">
-            That vision became autoempire.ai123@gmail.com. A platform where you pick a business type, write your email templates, and let AI agents handle everything else — 24 hours a day, 7 days a week, across every city in your target market.
+            That vision became AutoEmpire AI. A platform where you pick a business type, write your email templates, and let AI agents handle everything else — 24 hours a day, 7 days a week, across every city in your target market.
           </p>
         </motion.div>
 
@@ -57,7 +57,7 @@ export default function AboutPage() {
           className="p-8 rounded-3xl border border-white/10 bg-white/[0.02] mb-8">
           <h2 className="text-2xl font-bold mb-4">Our mission</h2>
           <p className="text-gray-400 leading-relaxed">
-            To democratize entrepreneurship. We believe that building a profitable business shouldn't require a team of 10, a $50,000 budget, or 80-hour work weeks. With autoempire.ai123@gmail.com, one person can run multiple fully automated businesses from their laptop — and actually have time left over to enjoy the results.
+            To democratize entrepreneurship. We believe that building a profitable business shouldn't require a team of 10, a $50,000 budget, or 80-hour work weeks. With AutoEmpire AI, one person can run multiple fully automated businesses from their laptop — and actually have time left over to enjoy the results.
           </p>
         </motion.div>
 
@@ -116,7 +116,7 @@ export default function AboutPage() {
       {/* Footer */}
       <footer className="border-t border-white/10 py-8">
         <div className="max-w-7xl mx-auto px-4 text-center text-sm text-gray-600">
-          © 2026 autoempire.ai123@gmail.com. Inc. All rights reserved.
+          © 2026 AutoEmpire AI. Inc. All rights reserved.
         </div>
       </footer>
     </div>
