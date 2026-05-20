@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Rocket, Zap, Globe, Users, Mail, BarChart3, ChevronRight, Play, Menu, X, Star, Shield, ArrowRight, Sparkles } from "lucide-react";
+import { Rocket, Zap, Globe, Users, Mail, BarChart3, ChevronRight, Play, Menu, X, Star, Shield, ArrowRight, Sparkles, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
