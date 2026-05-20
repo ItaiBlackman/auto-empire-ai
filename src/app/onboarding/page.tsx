@@ -2,7 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { Loader2, ChevronRight, Zap, Users, Globe, Mail, Rocket, BarChart } from "lucide-react";
+import { Loader2, ChevronRight, Zap, Users, Globe, Mail, Rocket, BarChart, Search, Play, Star, Shield } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -13,6 +13,15 @@ const BUSINESS_TYPES = [
   { id: "saas", name: "SaaS Outreach", desc: "Cold email and LinkedIn automation for software startups.", icon: Rocket, category: "SALES" },
   { id: "dropship", name: "E-com Dropshipping", desc: "One-click store creation with trending product discovery and ads.", icon: Zap, category: "COMMERCE" },
   { id: "support", name: "AI Support Team", desc: "24/7 intelligent customer support agents for any website.", icon: BarChart, category: "INFRASTRUCTURE" },
+  { id: "seo", name: "SEO Authority", desc: "Automated backlink building and keyword-optimized content clusters.", icon: Search, category: "MARKETING" },
+  { id: "video", name: "Video Ads Agency", desc: "AI-generated video scripts and production for high-ROAS social ads.", icon: Play, category: "CREATIVE" },
+  { id: "newsletter", name: "Newsletter Empire", desc: "Curation and growth automation for niche-specific premium newsletters.", icon: Mail, category: "MEDIA" },
+  { id: "linkedin", name: "LinkedIn Ghostwriting", desc: "Authority-building personal brand management for executives via AI.", icon: Users, category: "SERVICE" },
+  { id: "amazon", name: "Amazon FBA Bot", desc: "Inventory management and review automation for e-commerce sellers.", icon: Zap, category: "COMMERCE" },
+  { id: "realestate", name: "Real Estate Leads", desc: "Automated property valuation and lead qualification for realtors.", icon: Globe, category: "SALES" },
+  { id: "appdev", name: "App Development", desc: "No-code app generation and deployment for small businesses.", icon: Rocket, category: "TECH" },
+  { id: "influencer", name: "Influencer Matcher", desc: "AI-powered brand-to-influencer matchmaking and campaign tracking.", icon: Star, category: "MARKETING" },
+  { id: "legal", name: "Legal Document Bot", desc: "Automated contract generation and review for startups and SMEs.", icon: Shield, category: "LEGAL" },
 ];
 
 function OnboardingContent() {

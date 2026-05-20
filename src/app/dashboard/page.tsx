@@ -56,6 +56,11 @@ export default function OverviewPage() {
     { label: "MESSAGES SENT", value: stats.messages.toLocaleString(), change: `+${stats.messages}`, icon: <MessageSquare size={16} />, href: "/dashboard/messages" },
   ];
 
+  const scrollToUpgrade = () => {
+    const el = document.getElementById('upgrade-section');
+    if (el) el.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <Dashboard profile={profile}>
       <div className="p-8 max-w-7xl mx-auto w-full">
@@ -64,9 +69,17 @@ export default function OverviewPage() {
             <h1 className="text-3xl font-bold tracking-tight">Empire Overview</h1>
             <p className="text-gray-500">Welcome back, {profile?.full_name}. Your AI agents are hard at work.</p>
           </div>
-          <button onClick={() => router.push("/onboarding")} className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full hover:bg-gray-200 transition-colors">
-            <Plus size={16} /> New Business
-          </button>
+          <div className="flex items-center gap-3">
+            <button 
+              onClick={scrollToUpgrade}
+              className="flex items-center gap-2 px-5 py-2.5 bg-white/5 border border-white/10 text-white text-sm font-bold rounded-full hover:bg-white/10 transition-colors"
+            >
+              <Zap size={16} className="text-yellow-400" /> Upgrade
+            </button>
+            <button onClick={() => router.push("/onboarding")} className="flex items-center gap-2 px-5 py-2.5 bg-white text-black text-sm font-bold rounded-full hover:bg-gray-200 transition-colors">
+              <Plus size={16} /> New Business
+            </button>
+          </div>
         </div>
 
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-10">
@@ -129,6 +142,36 @@ export default function OverviewPage() {
               ))}
             </div>
           </div>
+        </div>
+
+        {/* Upgrade Section */}
+        <div id="upgrade-section" className="mt-20 p-10 rounded-3xl border border-white/10 bg-gradient-to-b from-white/[0.05] to-transparent relative overflow-hidden">
+          <div className="relative z-10 max-w-2xl">
+            <div className="w-12 h-12 rounded-2xl bg-white text-black flex items-center justify-center mb-6">
+              <Zap size={24} />
+            </div>
+            <h2 className="text-3xl font-bold mb-4">Scale your Empire.</h2>
+            <p className="text-gray-400 mb-8 leading-relaxed">
+              Unlock unlimited AI agents, advanced business templates, and priority lead generation. 
+              Our Pro and Unlimited plans are designed to help you scale from one business to an entire empire.
+            </p>
+            <div className="flex flex-wrap gap-4">
+              <button 
+                onClick={() => router.push("/pricing")}
+                className="px-8 py-3 bg-white text-black font-bold rounded-full hover:bg-gray-200 transition-all"
+              >
+                View Pricing
+              </button>
+              <button 
+                onClick={() => router.push("/dashboard/settings")}
+                className="px-8 py-3 bg-white/5 border border-white/10 text-white font-bold rounded-full hover:bg-white/10 transition-all"
+              >
+                Manage Billing
+              </button>
+            </div>
+          </div>
+          <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-white/5 to-transparent pointer-events-none" />
+          <Zap className="absolute -bottom-10 -right-10 w-64 h-64 text-white/5 rotate-12 pointer-events-none" />
         </div>
       </div>
     </Dashboard>

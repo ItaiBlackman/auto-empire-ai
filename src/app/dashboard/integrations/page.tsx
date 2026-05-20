@@ -16,8 +16,19 @@ const INTEGRATIONS = [
   { id: "openai", name: "OpenAI", desc: "GPT-4 and DALL-E APIs", category: "AI & Automation", color: "#10A37F", logo: "🧠" },
 
   // Communication
-  { id: "slack", name: "Slack", desc: "Team messaging and collaboration", category: "Communication", color: "#4A154B", logo: "💬" },
-  { id: "gmail", name: "Gmail", desc: "Send and receive emails", category: "Communication", color: "#EA4335", logo: "📧" },
+  { id: "slack", name: "Slack", desc: "Team messaging and collaboration", category: "Communication", color: "#4A154B", logo: (
+    <svg viewBox="0 0 122.8 122.8" className="w-6 h-6">
+      <path d="M25.8 77.6c0 7.1-5.8 12.9-12.9 12.9S0 84.7 0 77.6s5.8-12.9 12.9-12.9h12.9v12.9zm6.4 0c0-7.1 5.8-12.9 12.9-12.9s12.9 5.8 12.9 12.9v32.3c0 7.1-5.8 12.9-12.9 12.9s-12.9-5.8-12.9-12.9V77.6z" fill="#e01e5a"/>
+      <path d="M45.2 25.8c-7.1 0-12.9-5.8-12.9-12.9S38.1 0 45.2 0s12.9 5.8 12.9 12.9v12.9H45.2zm0 6.4c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H12.9C5.8 58.1 0 52.3 0 45.2s5.8-12.9 12.9-12.9h32.3z" fill="#36c5f0"/>
+      <path d="M97 45.2c0-7.1 5.8-12.9 12.9-12.9s12.9 5.8 12.9 12.9-5.8 12.9-12.9 12.9H97V45.2zm-6.4 0c0 7.1-5.8 12.9-12.9 12.9s-12.9-5.8-12.9-12.9V12.9C77.6 5.8 83.4 0 90.5 0s12.9 5.8 12.9 12.9v32.3z" fill="#2eb67d"/>
+      <path d="M77.6 97c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9-12.9-5.8-12.9-12.9V97h12.9zm0-6.4c-7.1 0-12.9-5.8-12.9-12.9s5.8-12.9 12.9-12.9h32.3c7.1 0 12.9 5.8 12.9 12.9s-5.8 12.9-12.9 12.9H77.6z" fill="#ecb22e"/>
+    </svg>
+  ) },
+  { id: "gmail", name: "Gmail", desc: "Send and receive emails", category: "Communication", color: "#EA4335", logo: (
+    <svg viewBox="0 0 24 24" className="w-6 h-6">
+      <path d="M24 4.5v15c0 .85-.65 1.5-1.5 1.5H21V7.39l-9 6.58-9-6.58V21H1.5C.65 21 0 20.35 0 19.5v-15c0-.42.17-.8.44-1.06.27-.27.64-.44 1.06-.44h.18L12 11.48 22.32 3h.18c.42 0 .8.17 1.06.44.27.27.44.64.44 1.06z" fill="#EA4335"/>
+    </svg>
+  ) },
   { id: "whatsapp", name: "WhatsApp", desc: "Message leads via WhatsApp", category: "Communication", color: "#25D366", logo: "📱" },
   { id: "telegram", name: "Telegram", desc: "Bot and messaging automation", category: "Communication", color: "#2CA5E0", logo: "✈️" },
   { id: "twilio", name: "Twilio", desc: "SMS and voice calls", category: "Communication", color: "#F22F46", logo: "📞" },
@@ -33,7 +44,11 @@ const INTEGRATIONS = [
   { id: "etsy", name: "Etsy", desc: "Handmade and vintage marketplace", category: "E-commerce", color: "#F56400", logo: "🎨" },
 
   // Payments
-  { id: "stripe", name: "Stripe", desc: "Payment processing and billing", category: "Payments", color: "#635BFF", logo: "💳" },
+  { id: "stripe", name: "Stripe", desc: "Payment processing and billing", category: "Payments", color: "#635BFF", logo: (
+    <svg viewBox="0 0 640 512" className="w-6 h-6">
+      <path d="M609.4 233.3c0-125.1-61.1-186.2-181.3-186.2-119.5 0-181.3 65.1-181.3 183.1 0 124.7 67.7 187.8 192.8 187.8 52.8 0 91.9-10.2 122.7-25.5v-68.8c-29.8 13-64 21.4-102.3 21.4-67.6 0-109.5-28.5-112.4-90.8h261.4c.5-5.5.5-14.9.5-21zm-260.7-32c0-55.9 30.2-86.6 80.3-86.6 48.3 0 79.3 30.7 79.3 86.6H348.7zM73.5 189.1c0-35.8 28.9-52.4 78-52.4 44.5 0 94.2 17 127 34.5v-81.2c-35.1-14.9-78.7-23.3-126.3-23.3-101.9 0-181.3 53.6-181.3 153.8 0 153 209.3 128.5 209.3 194.1 0 38.3-34.2 53.3-88.3 53.3-54.1 0-109.3-21.1-146-44.5v82.2c41.3 19.9 95.6 32.8 147.1 32.8 105.9 0 191.4-50.4 191.4-153.1 0-160.7-210.9-134.1-210.9-196.2z" fill="#635BFF"/>
+    </svg>
+  ) },
   { id: "paypal", name: "PayPal", desc: "Online payments", category: "Payments", color: "#003087", logo: "🅿️" },
   { id: "gumroad", name: "Gumroad", desc: "Sell digital products", category: "Payments", color: "#FF90E8", logo: "💰" },
   { id: "lemonsqueezy", name: "Lemon Squeezy", desc: "Payments for SaaS", category: "Payments", color: "#FFD234", logo: "🍋" },
@@ -65,9 +80,21 @@ const INTEGRATIONS = [
   { id: "facebook", name: "Facebook", desc: "Pages and ad management", category: "Social Media", color: "#1877F2", logo: "👥" },
 
   // Development
-  { id: "github", name: "GitHub", desc: "Code repository management", category: "Development", color: "#181717", logo: "🐙" },
-  { id: "vercel", name: "Vercel", desc: "Deploy and host web apps", category: "Development", color: "#000000", logo: "▲" },
-  { id: "supabase", name: "Supabase", desc: "Open source Firebase alternative", category: "Development", color: "#3ECF8E", logo: "⚡" },
+  { id: "github", name: "GitHub", desc: "Code repository management", category: "Development", color: "#181717", logo: (
+    <svg viewBox="0 0 24 24" className="w-6 h-6">
+      <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.43.372.823 1.102.823 2.222 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12" fill="#FFFFFF"/>
+    </svg>
+  ) },
+  { id: "vercel", name: "Vercel", desc: "Deploy and host web apps", category: "Development", color: "#000000", logo: (
+    <svg viewBox="0 0 512 512" className="w-6 h-6">
+      <path d="M256 48l240 416H16z" fill="#FFFFFF"/>
+    </svg>
+  ) },
+  { id: "supabase", name: "Supabase", desc: "Open source Firebase alternative", category: "Development", color: "#3ECF8E", logo: (
+    <svg viewBox="0 0 24 24" className="w-6 h-6">
+      <path d="M21.362 9.354H12V.341L2.638 12.821h9.362v9.013l9.362-12.48z" fill="#3ECF8E"/>
+    </svg>
+  ) },
   { id: "webflow", name: "Webflow", desc: "No-code website builder", category: "Development", color: "#4353FF", logo: "🌊" },
 ];
 

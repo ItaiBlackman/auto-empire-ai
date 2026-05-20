@@ -2,7 +2,7 @@
 
 import React, { useEffect, useState } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { TrendingUp, ChevronRight, Loader2, Bot, Zap, Mail } from "lucide-react";
+import { TrendingUp, ChevronRight, Loader2, Bot, Zap, Mail, Edit2, Trash2, DollarSign, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -39,6 +39,34 @@ export default function BusinessesPage() {
     ]);
     setTasks(t || []);
     setActivities(a || []);
+  };
+
+  const handleRename = async (id: string) => {
+    const newName = prompt("Enter new business name:", selected.name);
+    if (!newName || newName === selected.name) return;
+    const { error } = await supabase.from("businesses").update({ name: newName }).eq("id", id);
+    if (!error) {
+      setSelected({ ...selected, name: newName });
+      fetchBusinesses();
+    }
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this business? This cannot be undone.")) return;
+    const { error } = await supabase.from("businesses").delete().eq("id", id);
+    if (!error) {
+      setSelected(null);
+      fetchBusinesses();
+    }
+  };
+
+  const handleSell = async (id: string) => {
+    alert("Listing your business on the AutoEmpire Marketplace... Our team will contact you with valuation details.");
+  };
+
+  const handleAddMember = async (id: string) => {
+    const email = prompt("Enter team member email:");
+    if (email) alert(`Invitation sent to ${email}`);
   };
 
   if (loading) return (
@@ -127,6 +155,21 @@ export default function BusinessesPage() {
                 </button>
                 <button onClick={() => setSelected(null)} className="text-gray-500 hover:text-white text-2xl leading-none ml-2">×</button>
               </div>
+            </div>
+
+            <div className="flex flex-wrap gap-2 mb-8">
+              <button onClick={() => handleRename(selected.id)} className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs font-bold hover:bg-white/10 transition-colors">
+                <Edit2 size={12} /> Rename
+              </button>
+              <button onClick={() => handleAddMember(selected.id)} className="flex items-center gap-2 px-3 py-1.5 bg-white/5 border border-white/10 rounded-lg text-xs font-bold hover:bg-white/10 transition-colors">
+                <Users size={12} /> Add Member
+              </button>
+              <button onClick={() => handleSell(selected.id)} className="flex items-center gap-2 px-3 py-1.5 bg-green-500/10 border border-green-500/20 text-green-400 rounded-lg text-xs font-bold hover:bg-green-500/20 transition-colors">
+                <DollarSign size={12} /> Sell Business
+              </button>
+              <button onClick={() => handleDelete(selected.id)} className="flex items-center gap-2 px-3 py-1.5 bg-red-500/10 border border-red-500/20 text-red-400 rounded-lg text-xs font-bold hover:bg-red-500/20 transition-colors">
+                <Trash2 size={12} /> Delete
+              </button>
             </div>
 
             <div className="grid grid-cols-3 gap-4 mb-8">
