@@ -1,74 +1,38 @@
 "use client";
 
-import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+import React, { useState, useEffect } from "react";
 import { Search, Check, Plus, Zap } from "lucide-react";
 import { motion } from "framer-motion";
+import { createClient } from "@/utils/supabase/client";
+import Nango from "@nangohq/frontend";
 import Dashboard from "@/components/Dashboard";
 
 const INTEGRATIONS = [
-  // AI & Automation
-  { id: "claude", name: "Claude", desc: "AI assistant by Anthropic", category: "AI & Automation", logo: "🤖", zapierUrl: "https://zapier.com/apps/claude-ai/integrations" },
-  { id: "lovable", name: "Lovable", desc: "AI app builder", category: "AI & Automation", logo: "💜", zapierUrl: "https://zapier.com/apps/webhook/integrations" },
-  { id: "zapier", name: "Zapier", desc: "Automate workflows between apps", category: "AI & Automation", logo: "⚡", zapierUrl: "https://zapier.com/app/dashboard" },
-  { id: "make", name: "Make", desc: "Visual automation platform", category: "AI & Automation", logo: "🔮", zapierUrl: "https://zapier.com/apps/webhook/integrations" },
-  { id: "n8n", name: "n8n", desc: "Open source automation", category: "AI & Automation", logo: "🔁", zapierUrl: "https://zapier.com/apps/webhook/integrations" },
-  { id: "openai", name: "OpenAI", desc: "GPT-4 and DALL-E APIs", category: "AI & Automation", logo: "🧠", zapierUrl: "https://zapier.com/apps/openai/integrations" },
-
-  // Communication
-  { id: "slack", name: "Slack", desc: "Team messaging and collaboration", category: "Communication", logo: "💬", zapierUrl: "https://zapier.com/apps/slack/integrations" },
-  { id: "gmail", name: "Gmail", desc: "Send and receive emails", category: "Communication", logo: "📧", zapierUrl: "https://zapier.com/apps/gmail/integrations" },
-  { id: "whatsapp", name: "WhatsApp", desc: "Message leads via WhatsApp", category: "Communication", logo: "📱", zapierUrl: "https://zapier.com/apps/whatsapp/integrations" },
-  { id: "telegram", name: "Telegram", desc: "Bot and messaging automation", category: "Communication", logo: "✈️", zapierUrl: "https://zapier.com/apps/telegram/integrations" },
-  { id: "twilio", name: "Twilio", desc: "SMS and voice calls", category: "Communication", logo: "📞", zapierUrl: "https://zapier.com/apps/twilio/integrations" },
-  { id: "mailchimp", name: "Mailchimp", desc: "Email marketing campaigns", category: "Communication", logo: "🐵", zapierUrl: "https://zapier.com/apps/mailchimp/integrations" },
-  { id: "sendgrid", name: "SendGrid", desc: "Transactional email service", category: "Communication", logo: "📨", zapierUrl: "https://zapier.com/apps/sendgrid/integrations" },
-
-  // E-commerce
-  { id: "shopify", name: "Shopify", desc: "E-commerce store management", category: "E-commerce", logo: "🛍️", zapierUrl: "https://zapier.com/apps/shopify/integrations" },
-  { id: "dropship", name: "Dropship.io", desc: "Dropshipping product research", category: "E-commerce", logo: "📦", zapierUrl: "https://zapier.com/apps/webhook/integrations" },
-  { id: "woocommerce", name: "WooCommerce", desc: "WordPress e-commerce", category: "E-commerce", logo: "🛒", zapierUrl: "https://zapier.com/apps/woocommerce/integrations" },
-  { id: "amazon", name: "Amazon Seller", desc: "Amazon marketplace integration", category: "E-commerce", logo: "📦", zapierUrl: "https://zapier.com/apps/amazon-seller-central/integrations" },
-  { id: "ebay", name: "eBay", desc: "eBay marketplace integration", category: "E-commerce", logo: "🏪", zapierUrl: "https://zapier.com/apps/ebay/integrations" },
-  { id: "etsy", name: "Etsy", desc: "Handmade and vintage marketplace", category: "E-commerce", logo: "🎨", zapierUrl: "https://zapier.com/apps/etsy/integrations" },
-
-  // Payments
-  { id: "stripe", name: "Stripe", desc: "Payment processing and billing", category: "Payments", logo: "💳", zapierUrl: "https://zapier.com/apps/stripe/integrations" },
-  { id: "paypal", name: "PayPal", desc: "Online payments", category: "Payments", logo: "🅿️", zapierUrl: "https://zapier.com/apps/paypal/integrations" },
-  { id: "gumroad", name: "Gumroad", desc: "Sell digital products", category: "Payments", logo: "💰", zapierUrl: "https://zapier.com/apps/gumroad/integrations" },
-  { id: "lemonsqueezy", name: "Lemon Squeezy", desc: "Payments for SaaS", category: "Payments", logo: "🍋", zapierUrl: "https://zapier.com/apps/lemon-squeezy/integrations" },
-
-  // CRM & Sales
-  { id: "hubspot", name: "HubSpot", desc: "CRM and marketing platform", category: "CRM & Sales", logo: "🧡", zapierUrl: "https://zapier.com/apps/hubspot/integrations" },
-  { id: "salesforce", name: "Salesforce", desc: "Enterprise CRM platform", category: "CRM & Sales", logo: "☁️", zapierUrl: "https://zapier.com/apps/salesforce/integrations" },
-  { id: "pipedrive", name: "Pipedrive", desc: "Sales pipeline management", category: "CRM & Sales", logo: "📊", zapierUrl: "https://zapier.com/apps/pipedrive/integrations" },
-  { id: "apollo", name: "Apollo.io", desc: "Lead generation and outreach", category: "CRM & Sales", logo: "🚀", zapierUrl: "https://zapier.com/apps/apollo/integrations" },
-
-  // Productivity
-  { id: "notion", name: "Notion", desc: "Docs, wikis, and databases", category: "Productivity", logo: "📝", zapierUrl: "https://zapier.com/apps/notion/integrations" },
-  { id: "airtable", name: "Airtable", desc: "Flexible database and spreadsheet", category: "Productivity", logo: "📋", zapierUrl: "https://zapier.com/apps/airtable/integrations" },
-  { id: "calendly", name: "Calendly", desc: "Schedule meetings automatically", category: "Productivity", logo: "📅", zapierUrl: "https://zapier.com/apps/calendly/integrations" },
-  { id: "google_calendar", name: "Google Calendar", desc: "Calendar and scheduling", category: "Productivity", logo: "📆", zapierUrl: "https://zapier.com/apps/google-calendar/integrations" },
-  { id: "google_sheets", name: "Google Sheets", desc: "Spreadsheets and data", category: "Productivity", logo: "📊", zapierUrl: "https://zapier.com/apps/google-sheets/integrations" },
-  { id: "trello", name: "Trello", desc: "Kanban project management", category: "Productivity", logo: "📌", zapierUrl: "https://zapier.com/apps/trello/integrations" },
-
-  // Analytics
-  { id: "google_analytics", name: "Google Analytics", desc: "Website traffic analytics", category: "Analytics", logo: "📈", zapierUrl: "https://zapier.com/apps/google-analytics/integrations" },
-  { id: "mixpanel", name: "Mixpanel", desc: "Product analytics platform", category: "Analytics", logo: "📉", zapierUrl: "https://zapier.com/apps/mixpanel/integrations" },
-  { id: "hotjar", name: "Hotjar", desc: "Heatmaps and user recordings", category: "Analytics", logo: "🔥", zapierUrl: "https://zapier.com/apps/hotjar/integrations" },
-
-  // Social Media
-  { id: "instagram", name: "Instagram", desc: "Post and manage content", category: "Social Media", logo: "📸", zapierUrl: "https://zapier.com/apps/instagram/integrations" },
-  { id: "twitter", name: "X (Twitter)", desc: "Post and monitor tweets", category: "Social Media", logo: "𝕏", zapierUrl: "https://zapier.com/apps/twitter/integrations" },
-  { id: "linkedin", name: "LinkedIn", desc: "Professional network automation", category: "Social Media", logo: "💼", zapierUrl: "https://zapier.com/apps/linkedin/integrations" },
-  { id: "tiktok", name: "TikTok", desc: "Short video content automation", category: "Social Media", logo: "🎵", zapierUrl: "https://zapier.com/apps/tiktok/integrations" },
-  { id: "facebook", name: "Facebook", desc: "Pages and ad management", category: "Social Media", logo: "👥", zapierUrl: "https://zapier.com/apps/facebook-pages/integrations" },
-
-  // Development
-  { id: "github", name: "GitHub", desc: "Code repository management", category: "Development", logo: "🐙", zapierUrl: "https://zapier.com/apps/github/integrations" },
-  { id: "vercel", name: "Vercel", desc: "Deploy and host web apps", category: "Development", logo: "▲", zapierUrl: "https://zapier.com/apps/vercel/integrations" },
-  { id: "supabase", name: "Supabase", desc: "Open source Firebase alternative", category: "Development", logo: "⚡", zapierUrl: "https://zapier.com/apps/supabase/integrations" },
-  { id: "webflow", name: "Webflow", desc: "No-code website builder", category: "Development", logo: "🌊", zapierUrl: "https://zapier.com/apps/webflow/integrations" },
+  { id: "gmail", name: "Gmail", desc: "Send and receive emails", category: "Communication", logo: "📧", nangoId: "google-mail" },
+  { id: "slack", name: "Slack", desc: "Team messaging and collaboration", category: "Communication", logo: "💬", nangoId: "slack" },
+  { id: "whatsapp", name: "WhatsApp", desc: "Message leads via WhatsApp", category: "Communication", logo: "📱", nangoId: null },
+  { id: "telegram", name: "Telegram", desc: "Bot and messaging automation", category: "Communication", logo: "✈️", nangoId: "telegram" },
+  { id: "twilio", name: "Twilio", desc: "SMS and voice calls", category: "Communication", logo: "📞", nangoId: null },
+  { id: "mailchimp", name: "Mailchimp", desc: "Email marketing campaigns", category: "Communication", logo: "🐵", nangoId: "mailchimp" },
+  { id: "shopify", name: "Shopify", desc: "E-commerce store management", category: "E-commerce", logo: "🛍️", nangoId: "shopify" },
+  { id: "stripe", name: "Stripe", desc: "Payment processing and billing", category: "Payments", logo: "💳", nangoId: "stripe" },
+  { id: "paypal", name: "PayPal", desc: "Online payments", category: "Payments", logo: "🅿️", nangoId: null },
+  { id: "hubspot", name: "HubSpot", desc: "CRM and marketing platform", category: "CRM & Sales", logo: "🧡", nangoId: "hubspot" },
+  { id: "salesforce", name: "Salesforce", desc: "Enterprise CRM platform", category: "CRM & Sales", logo: "☁️", nangoId: "salesforce" },
+  { id: "pipedrive", name: "Pipedrive", desc: "Sales pipeline management", category: "CRM & Sales", logo: "📊", nangoId: "pipedrive" },
+  { id: "notion", name: "Notion", desc: "Docs, wikis, and databases", category: "Productivity", logo: "📝", nangoId: "notion" },
+  { id: "airtable", name: "Airtable", desc: "Flexible database and spreadsheet", category: "Productivity", logo: "📋", nangoId: "airtable" },
+  { id: "google_calendar", name: "Google Calendar", desc: "Calendar and scheduling", category: "Productivity", logo: "📆", nangoId: "google-calendar" },
+  { id: "google_sheets", name: "Google Sheets", desc: "Spreadsheets and data", category: "Productivity", logo: "📊", nangoId: "google-sheet" },
+  { id: "github", name: "GitHub", desc: "Code repository management", category: "Development", logo: "🐙", nangoId: "github" },
+  { id: "instagram", name: "Instagram", desc: "Post and manage content", category: "Social Media", logo: "📸", nangoId: "instagram" },
+  { id: "twitter", name: "X (Twitter)", desc: "Post and monitor tweets", category: "Social Media", logo: "𝕏", nangoId: "twitter" },
+  { id: "linkedin", name: "LinkedIn", desc: "Professional network automation", category: "Social Media", logo: "💼", nangoId: "linkedin" },
+  { id: "facebook", name: "Facebook", desc: "Pages and ad management", category: "Social Media", logo: "👥", nangoId: "facebook" },
+  { id: "google_analytics", name: "Google Analytics", desc: "Website traffic analytics", category: "Analytics", logo: "📈", nangoId: "google-analytics" },
+  { id: "zapier", name: "Zapier", desc: "Automate workflows between apps", category: "AI & Automation", logo: "⚡", nangoId: null },
+  { id: "openai", name: "OpenAI", desc: "GPT-4 and DALL-E APIs", category: "AI & Automation", logo: "🧠", nangoId: null },
+  { id: "claude", name: "Claude", desc: "AI assistant by Anthropic", category: "AI & Automation", logo: "🤖", nangoId: null },
 ];
 
 const CATEGORIES = ["All", ...Array.from(new Set(INTEGRATIONS.map(i => i.category)))];
@@ -78,17 +42,66 @@ export default function IntegrationsPage() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("All");
   const [connecting, setConnecting] = useState<string | null>(null);
+  const [sessionToken, setSessionToken] = useState<string | null>(null);
+  const [profile, setProfile] = useState<any>(null);
+  const supabase = createClient();
+
+  useEffect(() => {
+    (async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) return;
+      const { data: prof } = await supabase.from("profiles").select("*").eq("id", user.id).single();
+      setProfile(prof);
+
+      // Get Nango session token
+      const res = await fetch("/api/nango-session", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ userId: user.id }),
+      });
+      const data = await res.json();
+      if (data.token) setSessionToken(data.token);
+    })();
+  }, []);
 
   const connect = async (integration: any) => {
     if (connected.has(integration.id)) {
       setConnected(prev => { const next = new Set(prev); next.delete(integration.id); return next; });
       return;
     }
+
     setConnecting(integration.id);
-    // Open Zapier connection page
-    window.open(integration.zapierUrl, "_blank");
-    await new Promise(r => setTimeout(r, 1000));
-    setConnected(prev => new Set(prev).add(integration.id));
+
+    if (integration.nangoId && sessionToken) {
+      try {
+        const nango = new Nango({ connectSessionToken: sessionToken });
+        await nango.auth(integration.nangoId);
+        setConnected(prev => new Set(prev).add(integration.id));
+      } catch (e) {
+        console.error(e);
+      }
+    } else {
+      // Fallback to Zapier for apps not in Nango
+      const zapierUrls: Record<string, string> = {
+        zapier: "https://zapier.com/app/dashboard",
+        openai: "https://zapier.com/apps/openai/integrations",
+        claude: "https://zapier.com/apps/claude-ai/integrations",
+        whatsapp: "https://zapier.com/apps/whatsapp/integrations",
+        twilio: "https://zapier.com/apps/twilio/integrations",
+        paypal: "https://zapier.com/apps/paypal/integrations",
+      };
+      const url = zapierUrls[integration.id] || "https://zapier.com/app/dashboard";
+      const popup = window.open(url, "_blank", "width=800,height=600");
+      const checkClosed = setInterval(() => {
+        if (!popup || popup.closed) {
+          clearInterval(checkClosed);
+          setConnected(prev => new Set(prev).add(integration.id));
+          setConnecting(null);
+        }
+      }, 500);
+      return;
+    }
+
     setConnecting(null);
   };
 
@@ -99,7 +112,7 @@ export default function IntegrationsPage() {
   });
 
   return (
-    <Dashboard>
+    <Dashboard profile={profile}>
       <div className="p-8 max-w-7xl mx-auto w-full">
         <div className="mb-8">
           <h1 className="text-3xl font-bold tracking-tight">Integrations</h1>
@@ -113,13 +126,11 @@ export default function IntegrationsPage() {
           </div>
         )}
 
-        <div className="flex flex-col sm:flex-row gap-4 mb-8">
-          <div className="flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-xl border border-white/10 flex-1">
-            <Search size={16} className="text-gray-500 shrink-0" />
-            <input value={search} onChange={e => setSearch(e.target.value)}
-              placeholder="Search integrations..."
-              className="bg-transparent border-none outline-none text-sm w-full" />
-          </div>
+        <div className="flex items-center gap-3 bg-white/5 px-4 py-2.5 rounded-xl border border-white/10 mb-6">
+          <Search size={16} className="text-gray-500 shrink-0" />
+          <input value={search} onChange={e => setSearch(e.target.value)}
+            placeholder="Search integrations..."
+            className="bg-transparent border-none outline-none text-sm w-full" />
         </div>
 
         <div className="flex gap-2 flex-wrap mb-8">
@@ -153,13 +164,9 @@ export default function IntegrationsPage() {
                 <p className="text-xs text-gray-400 mb-4">{integration.desc}</p>
                 <button onClick={() => connect(integration)} disabled={isConnecting}
                   className={`w-full py-2 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-2 ${isConnected ? 'bg-green-500/10 text-green-400 hover:bg-red-500/10 hover:text-red-400 border border-green-500/20' : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}`}>
-                  {isConnecting ? (
-                    <span className="animate-pulse">Connecting...</span>
-                  ) : isConnected ? (
-                    <><Check size={12} /> Connected</>
-                  ) : (
-                    <><Plus size={12} /> Connect</>
-                  )}
+                  {isConnecting ? <span className="animate-pulse">Connecting...</span>
+                    : isConnected ? <><Check size={12} /> Connected</>
+                    : <><Plus size={12} /> Connect</>}
                 </button>
               </motion.div>
             );
