@@ -5,7 +5,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { 
   Users, Globe, Mail, Rocket, Zap, BarChart3, 
-  TrendingUp, Home, Youtube, Layout, Gamepad2, 
+  TrendingUp, Home, Play, Layout, Gamepad2, 
   UserPlus, ShieldCheck, FileText, Music, ChevronRight
 } from "lucide-react";
 
@@ -61,7 +61,7 @@ const ALL_TEMPLATES = [
   {
     title: "AI YouTube Network",
     description: "AI runs dozens of faceless channels with automated video production.",
-    icon: <Youtube size={24} />,
+    icon: <Play size={24} />,
     type: "Content"
   },
   {
