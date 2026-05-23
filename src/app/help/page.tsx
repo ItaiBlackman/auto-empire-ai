@@ -12,7 +12,7 @@ const CATEGORIES = [
     articles: [
       {
         q: "How do I create my first business?",
-        a: "From your dashboard, click the '+ New Business' button in the top right. You'll be taken to the onboarding page where you can choose from 6 business templates or create a custom one. After selecting your business type, you'll be prompted to write your email templates, then your AI agents will start working automatically."
+        a: "From your dashboard, click the '+ New Business' button in the top right. You'll be taken to the onboarding page where you can choose from 15 business templates or create a custom one. After selecting your business type, you'll be prompted to write your email templates, then your AI agents will start working automatically."
       },
       {
         q: "How do AI agents find leads?",

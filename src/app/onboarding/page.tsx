@@ -2,7 +2,7 @@
 
 import React, { useState, Suspense } from "react";
 import { createClient } from "@/utils/supabase/client";
-import { Loader2, ChevronRight, Zap, Users, Globe, Mail, Rocket, BarChart } from "lucide-react";
+import { Loader2, ChevronRight, Zap, Users, Globe, Mail, Rocket, BarChart, TrendingUp, Home, Play, Layout, Gamepad2, UserPlus, ShieldCheck, FileText, Music } from "lucide-react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
@@ -13,6 +13,15 @@ const BUSINESS_TYPES = [
   { id: "saas", name: "SaaS Outreach", desc: "Cold email and LinkedIn automation for software startups.", icon: Rocket, category: "SALES" },
   { id: "dropship", name: "E-com Dropshipping", desc: "One-click store creation with trending product discovery and ads.", icon: Zap, category: "COMMERCE" },
   { id: "support", name: "AI Support Team", desc: "24/7 intelligent customer support agents for any website.", icon: BarChart, category: "INFRASTRUCTURE" },
+  { id: "hedgefund", name: "AI Hedge Fund", desc: "Fully autonomous AI that buys/sells stocks, ETFs, and options based on market analysis.", icon: TrendingUp, category: "FINANCE" },
+  { id: "realestate", name: "AI Real Estate Acquirer", desc: "AI finds undervalued homes, Airbnb properties, or rental opportunities automatically.", icon: Home, category: "REAL ESTATE" },
+  { id: "youtube", name: "AI YouTube Network", desc: "AI runs dozens of faceless channels with automated video production.", icon: Play, category: "CONTENT" },
+  { id: "appfactory", name: "AI App Factory", desc: "AI launches small SaaS/mobile apps continuously.", icon: Layout, category: "SOFTWARE" },
+  { id: "gamestudio", name: "AI Game Studio", desc: "AI creates mobile/Steam games, updates them, and monetizes with ads or purchases.", icon: Gamepad2, category: "GAMING" },
+  { id: "recruiting", name: "AI Recruiting Company", desc: "AI matches employers with candidates and automates hiring.", icon: UserPlus, category: "HR" },
+  { id: "cybersecurity", name: "AI Cybersecurity Scanner", desc: "AI scans websites/businesses for vulnerabilities and sells protection monitoring.", icon: ShieldCheck, category: "SECURITY" },
+  { id: "legal", name: "AI Legal Document Company", desc: "AI creates contracts, agreements, business documents, and compliance paperwork.", icon: FileText, category: "LEGAL" },
+  { id: "music", name: "AI Music Label", desc: "AI creates songs, artists, beats, albums, and distributes them to Spotify/Apple Music.", icon: Music, category: "ENTERTAINMENT" },
 ];
 
 function OnboardingContent() {

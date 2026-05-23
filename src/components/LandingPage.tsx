@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";
-import { Rocket, Zap, Globe, Users, Mail, BarChart3, ChevronRight, Play, Menu, X, Star, Shield, ArrowRight, Sparkles } from "lucide-react";
+import { Rocket, Zap, Globe, Users, Mail, BarChart3, ChevronRight, Play, Menu, X, Star, Shield, ArrowRight, Sparkles, Search } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
@@ -235,7 +235,7 @@ const LandingPage = () => {
               <h2 className="text-4xl font-bold tracking-tight mb-4">Marketplace</h2>
               <p className="text-gray-400">Choose a ready-made business model and launch instantly.</p>
             </div>
-            <button className="text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all">
+            <button onClick={() => router.push("/templates")} className="text-sm font-medium flex items-center gap-1 hover:gap-2 transition-all">
               View all templates <ChevronRight size={16} />
             </button>
           </div>

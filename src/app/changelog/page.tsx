@@ -7,6 +7,19 @@ import { Zap, Check, ArrowUpRight } from "lucide-react";
 
 const CHANGELOG = [
   {
+    version: "1.5.0",
+    date: "May 20, 2026",
+    tag: "Feature Update",
+    tagColor: "bg-blue-500/10 text-blue-400",
+    changes: [
+      "Expanded business templates from 6 to 15, including SEO, Video Ads, and LinkedIn Ghostwriting",
+      "Enhanced dashboard with 'Scroll to Upgrade' button and dedicated upgrade section",
+      "Updated integration branding with official SVG icons for Slack, GitHub, Stripe, and more",
+      "Added Business Management features: Rename, Delete, Sell, and Add Members directly from the dashboard",
+      "Audited all platform pages for data accuracy and brand consistency",
+    ]
+  },
+  {
     version: "1.4.0",
     date: "May 16, 2026",
     tag: "Major Release",

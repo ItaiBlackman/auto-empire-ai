@@ -16,8 +16,15 @@ const Dashboard = ({ children, profile }: { children?: React.ReactNode, profile?
     { icon: <MessageSquare size={18} />, label: "Messages", href: "/dashboard/messages" },
     { icon: <CheckSquare size={18} />, label: "Tasks", href: "/dashboard/tasks" },
     { icon: <Zap size={18} />, label: "Integrations", href: "/dashboard/integrations" },
-    { icon: <Zap size={18} />, label: "Zapier", href: "/dashboard/zapier" },
   ];
+
+  const scrollToUpgrade = () => {
+    if (pathname === "/dashboard") {
+      document.getElementById("upgrade-section")?.scrollIntoView({ behavior: "smooth" });
+    } else {
+      router.push("/dashboard?scroll=upgrade");
+    }
+  };
 
   return (
     <div className="flex h-screen bg-black text-white overflow-hidden">
@@ -35,7 +42,11 @@ const Dashboard = ({ children, profile }: { children?: React.ReactNode, profile?
               {item.icon}{item.label}
             </button>
           ))}
-          <div className="pt-4 mt-4 border-t border-white/5">
+          <div className="pt-4 mt-4 border-t border-white/5 space-y-1">
+            <button onClick={scrollToUpgrade}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
+              <TrendingUp size={18} /> Scroll to Upgrade
+            </button>
             <button onClick={() => router.push("/dashboard/settings")}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${pathname === '/dashboard/settings' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
               <Settings size={18} /> Settings
