@@ -154,11 +154,11 @@ export default function IntegrationsPage() {
                 <button onClick={() => connect(integration)} disabled={isConnecting}
                   className={`w-full py-2 rounded-xl text-xs font-bold transition-colors flex items-center justify-center gap-2 ${isConnected ? 'bg-green-500/10 text-green-400 hover:bg-red-500/10 hover:text-red-400 border border-green-500/20' : 'bg-white/5 text-white hover:bg-white/10 border border-white/10'}`}>
                   {isConnecting ? (
-                    <span className="animate-pulse">Opening Zapier...</span>
+                    <span className="animate-pulse">Connecting...</span>
                   ) : isConnected ? (
                     <><Check size={12} /> Connected</>
                   ) : (
-                    <><Plus size={12} /> Connect via Zapier</>
+                    <><Plus size={12} /> Connect</>
                   )}
                 </button>
               </motion.div>
