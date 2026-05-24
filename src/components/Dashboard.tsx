@@ -35,7 +35,7 @@ const Dashboard = ({ children, profile }: { children?: React.ReactNode, profile?
           </div>
           AutoEmpire
         </div>
-        <nav className="flex-1 px-4 py-4 space-y-1">
+        <nav className="flex-1 px-4 py-4 space-y-1 overflow-y-auto scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
           {navItems.map(item => (
             <button key={item.href} onClick={() => router.push(item.href)}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${pathname === item.href ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
@@ -43,10 +43,6 @@ const Dashboard = ({ children, profile }: { children?: React.ReactNode, profile?
             </button>
           ))}
           <div className="pt-4 mt-4 border-t border-white/5 space-y-1">
-            <button onClick={scrollToUpgrade}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-gray-400 hover:text-white hover:bg-white/5 transition-colors">
-              <TrendingUp size={18} /> Scroll to Upgrade
-            </button>
             <button onClick={() => router.push("/dashboard/settings")}
               className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors ${pathname === '/dashboard/settings' ? 'bg-white text-black font-bold' : 'text-gray-400 hover:text-white hover:bg-white/5'}`}>
               <Settings size={18} /> Settings
