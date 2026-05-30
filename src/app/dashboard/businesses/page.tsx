@@ -32,13 +32,7 @@ export default function BusinessesPage() {
   };
 
   const openBusiness = async (bus: any) => {
-    setSelected(bus);
-    const [{ data: t }, { data: a }] = await Promise.all([
-      supabase.from("business_tasks").select("*").eq("business_id", bus.id).order("due_date"),
-      supabase.from("activities").select("*").eq("business_id", bus.id).order("created_at", { ascending: false }).limit(10),
-    ]);
-    setTasks(t || []);
-    setActivities(a || []);
+    router.push(`/dashboard/businesses/${bus.id}`);
   };
 
   const handleRename = async (id: string) => {
