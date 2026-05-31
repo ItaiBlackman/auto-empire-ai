@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 import React, { useState, useEffect } from "react";
 import { Search, Check, Plus, Zap, Key, Clock, ExternalLink } from "lucide-react";
@@ -362,5 +362,6 @@ export default function IntegrationsPage() {
     </Dashboard>
   );
 }
+
 
 
