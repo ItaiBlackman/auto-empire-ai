@@ -112,7 +112,7 @@ function IntegrationLogo({ domain, name }: { domain: string; name: string }) {
   }
   return (
     <img
-      src={`https://logo.clearbit.com/${domain}`}
+      src={`https://img.logo.dev/${domain}?token=pk_X4PB5qTFRIui0VBWPAcMpA`}
       alt={name}
       className="w-7 h-7 object-contain rounded"
       onError={() => setError(true)}
@@ -362,3 +362,4 @@ export default function IntegrationsPage() {
     </Dashboard>
   );
 }
+
