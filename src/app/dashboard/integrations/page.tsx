@@ -114,7 +114,7 @@ function IntegrationLogo({ domain, name }: { domain: string; name: string }) {
     <img
       src={`https://logo.clearbit.com/${domain}`}
       alt={name}
-      className="w-8 h-8 object-contain rounded"
+      className="w-7 h-7 object-contain rounded"
       onError={() => setError(true)}
     />
   );
@@ -273,7 +273,7 @@ export default function IntegrationsPage() {
                 className={`p-5 rounded-2xl border transition-all ${isConnected ? "border-green-500/30 bg-green-500/[0.03]" : isComingSoon ? "border-white/5 bg-white/[0.01] opacity-60" : "border-white/10 bg-white/[0.02]"}`}>
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 p-1.5">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white bg-opacity-5 border border-white border-opacity-10 p-2 overflow-hidden">
                       <IntegrationLogo domain={integration.domain} name={integration.name} />
                     </div>
                     <div>
@@ -315,7 +315,7 @@ export default function IntegrationsPage() {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-[#111] border border-white/10 rounded-2xl p-6 w-full max-w-md">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 p-1.5">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white bg-opacity-5 border border-white border-opacity-10 p-2 overflow-hidden">
                 <IntegrationLogo domain={apiKeyModal.domain} name={apiKeyModal.name} />
               </div>
               <div>
