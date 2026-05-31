@@ -24,8 +24,22 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
   const [profile, setProfile] = useState<any>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState("overview");
+  const [isSystemRunning, setIsSystemRunning] = useState(true);
+  const [isAutonomous, setIsAutonomous] = useState(true);
   const supabase = createClient();
   const router = useRouter();
+
+  const handleOptimize = () => {
+    alert("AI agents are recalibrating strategy... Optimization will be complete in 60 seconds.");
+  };
+
+  const handleChat = () => {
+    router.push("/dashboard/messages");
+  };
+
+  const handleSettings = () => {
+    router.push("/dashboard/settings");
+  };
 
   useEffect(() => {
     fetchData();
@@ -104,21 +118,28 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
           </div>
 
           <div className="flex items-center gap-3">
-            <button className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-colors">
+            <button 
+              onClick={handleOptimize}
+              className="flex items-center gap-2 px-4 py-2 bg-white/5 border border-white/10 rounded-xl text-xs font-bold hover:bg-white/10 transition-colors">
               <RefreshCcw size={14} /> Optimize
             </button>
-            <button className="flex items-center gap-2 px-4 py-2 bg-white text-black rounded-xl text-xs font-bold hover:bg-gray-200 transition-colors">
-              <Play size={14} /> Start System
+            <button 
+              onClick={() => setIsSystemRunning(!isSystemRunning)}
+              className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs font-bold transition-colors ${isSystemRunning ? 'bg-red-500/10 text-red-500 border border-red-500/20 hover:bg-red-500/20' : 'bg-white text-black hover:bg-gray-200'}`}>
+              {isSystemRunning ? <Pause size={14} /> : <Play size={14} />}
+              {isSystemRunning ? 'Pause System' : 'Start System'}
             </button>
             <div className="w-px h-6 bg-white/10 mx-2" />
-            <button className="p-2 hover:bg-white/5 rounded-lg text-gray-400">
+            <button 
+              onClick={handleSettings}
+              className="p-2 hover:bg-white/5 rounded-lg text-gray-400">
               <Settings size={18} />
             </button>
           </div>
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto p-8 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-8 scrollbar-thin scrollbar-thumb-white/10 scrollbar-track-transparent">
           <div className="max-w-7xl mx-auto space-y-8">
             
             {/* Top Stats Row */}
@@ -197,7 +218,9 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
               {/* Right Column: AI OS & Live Feed */}
               <div className="space-y-8">
                 <AIControlCenter 
-                  status="Autonomous Mode: ON" 
+                  status={isAutonomous ? "Autonomous Mode: ON" : "Manual Mode: ON"} 
+                  isAutonomous={isAutonomous}
+                  onToggle={() => setIsAutonomous(!isAutonomous)}
                   goals={["Increase MRR by 15%", "Optimize ad spend", "Scale content reach"]}
                   actions={[
                     { agent: "Growth Bot", task: "Adjusted bidding strategy for Google Ads campaign" },
@@ -221,7 +244,9 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
                   <div className="relative z-10">
                     <h3 className="font-bold mb-2">Need a new strategy?</h3>
                     <p className="text-xs text-gray-400 mb-4">Chat with your lead AI architect to redesign your business model.</p>
-                    <button className="w-full py-2.5 bg-white text-black rounded-xl text-xs font-bold hover:bg-gray-200 transition-all flex items-center justify-center gap-2">
+                    <button 
+                      onClick={handleChat}
+                      className="w-full py-2.5 bg-white text-black rounded-xl text-xs font-bold hover:bg-gray-200 transition-all flex items-center justify-center gap-2">
                       <MessageCircle size={14} /> Open AI Chat
                     </button>
                   </div>

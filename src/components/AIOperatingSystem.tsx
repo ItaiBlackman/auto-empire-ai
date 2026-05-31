@@ -35,7 +35,7 @@ export const StatCard = ({ label, value, change, icon, trend }: any) => (
   </motion.div>
 );
 
-export const AIControlCenter = ({ status, actions, goals }: any) => (
+export const AIControlCenter = ({ status, actions, goals, isAutonomous, onToggle }: any) => (
   <div className="p-6 rounded-3xl border border-white/10 bg-white/[0.02] h-full">
     <div className="flex items-center justify-between mb-6">
       <div className="flex items-center gap-3">
@@ -45,17 +45,16 @@ export const AIControlCenter = ({ status, actions, goals }: any) => (
         <div>
           <h3 className="font-bold">AI Control Center</h3>
           <div className="flex items-center gap-2 mt-0.5">
-            <div className="w-1.5 h-1.5 rounded-full bg-green-500 animate-pulse" />
+            <div className={`w-1.5 h-1.5 rounded-full animate-pulse ${isAutonomous ? 'bg-green-500' : 'bg-yellow-500'}`} />
             <span className="text-[10px] text-gray-500 uppercase font-black">{status}</span>
           </div>
         </div>
       </div>
       <div className="flex items-center gap-2">
-        <button className="p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-          <Play size={14} />
-        </button>
-        <button className="p-2 rounded-lg bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
-          <Pause size={14} />
+        <button 
+          onClick={onToggle}
+          className={`p-2 rounded-lg border transition-colors ${isAutonomous ? 'bg-green-500/10 border-green-500/20 text-green-500 hover:bg-green-500/20' : 'bg-white/5 border-white/10 text-gray-400 hover:bg-white/10'}`}>
+          {isAutonomous ? <Zap size={14} /> : <Play size={14} />}
         </button>
       </div>
     </div>
