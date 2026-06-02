@@ -17,6 +17,7 @@ import {
 import { 
   HedgeFundModule, YouTubeModule, AppFactoryModule, MediaNetworkModule 
 } from "@/components/BusinessModules";
+import { AICommandCenter } from "@/components/AICommandCenter";
 
 export default function BusinessDashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
@@ -34,7 +35,14 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
   };
 
   const handleChat = () => {
-    router.push("/dashboard/messages");
+    // This can now be handled by the floating command center
+    const chatButton = document.querySelector('[aria-label="Open AI Chat"]') as HTMLElement;
+    if (chatButton) chatButton.click();
+  };
+
+  const onAICommand = (cmd: string) => {
+    if (cmd === 'rename') handleRename();
+    if (cmd === 'optimize') handleOptimize();
   };
 
   const handleSettings = () => {
@@ -321,6 +329,8 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
           </div>
         </div>
       </div>
+
+      <AICommandCenter business={business} onCommand={onAICommand} />
 
       <style jsx global>{`
         .custom-scrollbar::-webkit-scrollbar {
