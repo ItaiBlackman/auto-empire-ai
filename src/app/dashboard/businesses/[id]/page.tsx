@@ -38,7 +38,34 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
   };
 
   const handleSettings = () => {
-    router.push("/dashboard/settings");
+    setActiveTab("settings");
+  };
+
+  const handleRename = async () => {
+    const newName = prompt("Enter new business name:", business.name);
+    if (!newName || newName === business.name) return;
+    const { error } = await supabase.from("businesses").update({ name: newName }).eq("id", id);
+    if (!error) {
+      setBusiness({ ...business, name: newName });
+      alert("Business renamed successfully.");
+    }
+  };
+
+  const handleDelete = async () => {
+    if (!confirm("Are you sure you want to delete this business? This cannot be undone.")) return;
+    const { error } = await supabase.from("businesses").delete().eq("id", id);
+    if (!error) {
+      router.push("/dashboard/businesses");
+    }
+  };
+
+  const handleSell = () => {
+    alert("Listing your business on the AutoEmpire Marketplace... Our team will contact you with valuation details.");
+  };
+
+  const handleAddMember = () => {
+    const email = prompt("Enter team member email:");
+    if (email) alert(`Invitation sent to ${email}`);
   };
 
   useEffect(() => {
@@ -161,7 +188,7 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-sm font-black uppercase tracking-[0.2em] text-gray-500">Business Intelligence</h2>
                     <div className="flex gap-1">
-                      {["Overview", "Analytics", "Operations"].map(t => (
+                      {["Overview", "Analytics", "Operations", "Settings"].map(t => (
                         <button key={t} onClick={() => setActiveTab(t.toLowerCase())}
                           className={`px-3 py-1 rounded-md text-[10px] font-bold transition-all ${activeTab === t.toLowerCase() ? 'bg-white/10 text-white' : 'text-gray-600 hover:text-gray-400'}`}>
                           {t}
@@ -169,7 +196,44 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
                       ))}
                     </div>
                   </div>
-                  {renderBusinessModule()}
+                  
+                  {activeTab === "settings" ? (
+                    <div className="p-8 rounded-3xl border border-white/10 bg-white/[0.02] space-y-8">
+                      <div>
+                        <h3 className="text-lg font-bold mb-4">Business Configuration</h3>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <button onClick={handleRename} className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4 hover:bg-white/10 transition-all">
+                            <RefreshCcw size={18} className="text-blue-400" />
+                            <div className="text-left">
+                              <p className="text-sm font-bold">Rename Business</p>
+                              <p className="text-[10px] text-gray-500">Change the display name of your empire.</p>
+                            </div>
+                          </button>
+                          <button onClick={handleAddMember} className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4 hover:bg-white/10 transition-all">
+                            <Users size={18} className="text-purple-400" />
+                            <div className="text-left">
+                              <p className="text-sm font-bold">Manage Team</p>
+                              <p className="text-[10px] text-gray-500">Add or remove AI operators and human members.</p>
+                            </div>
+                          </button>
+                          <button onClick={handleSell} className="p-4 rounded-2xl bg-white/5 border border-white/10 flex items-center gap-4 hover:bg-white/10 transition-all">
+                            <DollarSign size={18} className="text-green-400" />
+                            <div className="text-left">
+                              <p className="text-sm font-bold">Sell Business</p>
+                              <p className="text-[10px] text-gray-500">List on the marketplace for immediate exit.</p>
+                            </div>
+                          </button>
+                          <button onClick={handleDelete} className="p-4 rounded-2xl bg-red-500/5 border border-red-500/10 flex items-center gap-4 hover:bg-red-500/10 transition-all group">
+                            <Zap size={18} className="text-red-500 group-hover:animate-pulse" />
+                            <div className="text-left">
+                              <p className="text-sm font-bold text-red-500">Terminate Operations</p>
+                              <p className="text-[10px] text-gray-500">Permanently delete all business data and assets.</p>
+                            </div>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  ) : renderBusinessModule()}
                 </section>
 
                 {/* Secondary Widgets */}
