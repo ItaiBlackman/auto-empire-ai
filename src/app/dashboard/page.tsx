@@ -101,7 +101,7 @@ export default function OverviewPage() {
               {businesses.length === 0 ? (
                 <div className="p-8 rounded-2xl border border-dashed border-white/10 text-center text-gray-500 text-sm">No businesses yet</div>
               ) : businesses.map((bus) => (
-                <div key={bus.id} onClick={() => router.push("/dashboard/businesses")}
+                <div key={bus.id} onClick={() => router.push(`/dashboard/businesses/${bus.id}`)}
                   className="p-4 rounded-2xl border border-white/10 bg-white/[0.02] hover:bg-white/[0.05] transition-all cursor-pointer flex items-center justify-between">
                   <div className="flex items-center gap-3">
                     <div className="w-10 h-10 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center">
