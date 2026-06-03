@@ -99,7 +99,7 @@ const INTEGRATIONS: Integration[] = [
   { id: "synthesia", name: "Synthesia", desc: "AI presenter videos", category: "Content & Media", domain: "synthesia.io", nangoId: null, status: "coming_soon" },
   { id: "descript", name: "Descript", desc: "AI editing and transcription", category: "Content & Media", domain: "descript.com", nangoId: null, status: "coming_soon" },
   { id: "capcut", name: "CapCut", desc: "Video editing platform", category: "Content & Media", domain: "capcut.com", nangoId: null, status: "coming_soon" },
-];const CATEGORIES = ["All", ...Array.from(new Set(INTEGRATIONS.map(i => i.category)))];
+];const LOGOS: Record<string, string> = {"gmail.com":"https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.s = ["All", ...Array.from(new Set(INTEGRATIONS.map(i => i.category)))];
 
 function IntegrationLogo({ domain, name }: { domain: string; name: string }) {
   const [error, setError] = React.useState(false);
@@ -112,7 +112,7 @@ function IntegrationLogo({ domain, name }: { domain: string; name: string }) {
   }
   return (
     <img
-      src={`https://img.logo.dev/${domain}?token=pk_X4PB5qTFRIui0VBWPAcMpA`}
+      src={LOGOS[domain] || ""}
       alt={name}
       className="w-7 h-7 object-contain rounded"
       onError={() => setError(true)}
