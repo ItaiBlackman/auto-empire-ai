@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import React, { useState, useEffect } from "react";
 import { Search, Check, Plus, Zap, Key, Clock, ExternalLink } from "lucide-react";
@@ -20,6 +20,8 @@ interface Integration {
   apiKeyUrl?: string;
   apiKeyLabel?: string;
 }
+
+const LOGOS: Record<string,string> = {"gmail.com":"https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.svg","slack.com":"https://upload.wikimedia.org/wikipedia/commons/d/d5/Slack_icon_2019.svg","whatsapp.com":"https://upload.wikimedia.org/wikipedia/commons/6/6b/WhatsApp.svg","telegram.org":"https://upload.wikimedia.org/wikipedia/commons/8/82/Telegram_logo.svg","twilio.com":"https://upload.wikimedia.org/wikipedia/commons/7/7e/Twilio-logo-red.svg","discord.com":"https://assets-global.website-files.com/6257adef93867e50d84d30e2/636e0a6a49cf127bf92de1e2_icon_clyde_blurple_RGB.png","zoom.us":"https://upload.wikimedia.org/wikipedia/commons/1/11/Zoom_Logo_2022.svg","intercom.com":"https://upload.wikimedia.org/wikipedia/commons/6/6e/Intercom_logo.svg","calendly.com":"https://asset.brandfetch.io/idZFkEXLNa/idxMCGQyAN.svg","mailchimp.com":"https://upload.wikimedia.org/wikipedia/commons/e/ef/Mailchimp_logo.svg","hubspot.com":"https://upload.wikimedia.org/wikipedia/commons/3/3f/HubSpot_Logo.svg","salesforce.com":"https://upload.wikimedia.org/wikipedia/commons/f/f9/Salesforce.com_logo.svg","pipedrive.com":"https://upload.wikimedia.org/wikipedia/commons/e/e8/Pipedrive_logo.svg","apollo.io":"https://asset.brandfetch.io/idM4SN0sFD/idyqnF_VHq.png","gohighlevel.com":"https://asset.brandfetch.io/id2sP3v8cU/idxuTNDQlE.png","close.com":"https://asset.brandfetch.io/idHYa8oZpd/idFivZqJVJ.svg","instantly.ai":"https://asset.brandfetch.io/idgX_1HuGB/idWa9P0s0v.png","lemlist.com":"https://asset.brandfetch.io/id-gsCCnDL/idT_rCWNqG.png","notion.so":"https://upload.wikimedia.org/wikipedia/commons/4/45/Notion_app_logo.png","google.com":"https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg","airtable.com":"https://upload.wikimedia.org/wikipedia/commons/4/4b/Airtable_Logo.svg","clickup.com":"https://upload.wikimedia.org/wikipedia/commons/9/90/ClickUp_Logo.svg","asana.com":"https://upload.wikimedia.org/wikipedia/commons/3/3b/Asana_logo.svg","trello.com":"https://upload.wikimedia.org/wikipedia/en/8/8c/Trello_logo.svg","monday.com":"https://upload.wikimedia.org/wikipedia/commons/c/c6/Monday_logo.png","linear.app":"https://asset.brandfetch.io/idvBO9LTMU/idRcRJiRMH.svg","openai.com":"https://upload.wikimedia.org/wikipedia/commons/0/04/ChatGPT_logo.svg","anthropic.com":"https://upload.wikimedia.org/wikipedia/commons/8/8a/Claude_AI_logo.svg","elevenlabs.io":"https://asset.brandfetch.io/idnF4aVNE5/idR1SV-Sss.png","perplexity.ai":"https://asset.brandfetch.io/idpL3S-7GN/idHEFPnHrh.png","huggingface.co":"https://huggingface.co/front/assets/huggingface_logo-noborder.svg","replicate.com":"https://asset.brandfetch.io/idEHJBjLmU/idwX9wHOkG.png","mistral.ai":"https://asset.brandfetch.io/idkAJgGNhM/idoR6bWMOh.png","zapier.com":"https://upload.wikimedia.org/wikipedia/commons/f/fd/Zapier_logo.svg","make.com":"https://asset.brandfetch.io/idAnlOahxc/idHTdFDM6J.svg","stripe.com":"https://upload.wikimedia.org/wikipedia/commons/b/ba/Stripe_Logo%2C_revised_2016.svg","paypal.com":"https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg","wise.com":"https://upload.wikimedia.org/wikipedia/commons/a/a0/Wise_logo_2022.svg","plaid.com":"https://asset.brandfetch.io/idVfgd8YFc/idR7mFGZ7r.svg","coinbase.com":"https://upload.wikimedia.org/wikipedia/commons/1/1a/24px-Coinbase_logo.png","binance.com":"https://upload.wikimedia.org/wikipedia/commons/5/57/Binance_Logo.png","alpaca.markets":"https://asset.brandfetch.io/idpjGkpJlh/idC3u-xL1j.png","shopify.com":"https://upload.wikimedia.org/wikipedia/commons/0/0e/Shopify_logo_2018.svg","woocommerce.com":"https://upload.wikimedia.org/wikipedia/commons/2/2a/WooCommerce_logo.svg","gumroad.com":"https://asset.brandfetch.io/idmhN0PwIy/idmBXDPZ4p.png","lemonsqueezy.com":"https://asset.brandfetch.io/idSO7iLLhz/id-6E5PjNK.png","printful.com":"https://upload.wikimedia.org/wikipedia/commons/b/b1/Printful_logo.svg","instagram.com":"https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png","twitter.com":"https://upload.wikimedia.org/wikipedia/commons/5/53/X_logo_2023_original.svg","linkedin.com":"https://upload.wikimedia.org/wikipedia/commons/c/ca/LinkedIn_logo_initials.png","facebook.com":"https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg","tiktok.com":"https://upload.wikimedia.org/wikipedia/commons/a/a9/TikTok_logo.svg","youtube.com":"https://upload.wikimedia.org/wikipedia/commons/0/09/YouTube_full-color_icon_%282017%29.svg","spotify.com":"https://upload.wikimedia.org/wikipedia/commons/1/19/Spotify_logo_without_text.svg","buffer.com":"https://asset.brandfetch.io/idhjdAXpuB/idTB_xvYX0.svg","hootsuite.com":"https://upload.wikimedia.org/wikipedia/commons/2/26/Hootsuite_owl_logo.svg","ahrefs.com":"https://asset.brandfetch.io/idxNBf9kej/idM1HYc_lO.png","semrush.com":"https://asset.brandfetch.io/idMpTwH1G4/idHrWjBfz5.png","hotjar.com":"https://asset.brandfetch.io/idHNSB_Bw5/idRuuA2EHp.svg","mixpanel.com":"https://asset.brandfetch.io/idqJaJEJkK/idBfazMLzT.png","posthog.com":"https://asset.brandfetch.io/idBGkA4vEV/idhg5NYRWB.png","github.com":"https://upload.wikimedia.org/wikipedia/commons/9/91/Octicons-mark-github.svg","gitlab.com":"https://upload.wikimedia.org/wikipedia/commons/1/18/GitLab_Logo.svg","vercel.com":"https://asset.brandfetch.io/idYnZDaUOa/idFMBBiLGS.svg","supabase.com":"https://asset.brandfetch.io/id5hfWJKKN/idtYAMKGLZ.svg","firebase.google.com":"https://upload.wikimedia.org/wikipedia/commons/3/37/Firebase_Logo.svg","mongodb.com":"https://upload.wikimedia.org/wikipedia/commons/9/93/MongoDB_Logo.svg","cloudflare.com":"https://upload.wikimedia.org/wikipedia/commons/4/4b/Cloudflare_Logo.svg","canva.com":"https://upload.wikimedia.org/wikipedia/commons/b/bb/Canva_Logo.svg","heygen.com":"https://asset.brandfetch.io/id2uJiSJDt/idmC7jmNdY.png","runwayml.com":"https://asset.brandfetch.io/idDhbCjBR_/idxFk18M0W.png","synthesia.io":"https://asset.brandfetch.io/idkYR3J-VT/id1zH8bIPM.png","descript.com":"https://asset.brandfetch.io/idRq0V3xgK/idKpGlU8qH.png","capcut.com":"https://asset.brandfetch.io/idM9NxBs7V/idBs4zFVpL.png"};
 
 const INTEGRATIONS: Integration[] = [
   { id: "gmail", name: "Gmail", desc: "Send and receive emails", category: "Communication", domain: "gmail.com", nangoId: "google-mail", status: "oauth" },
@@ -99,11 +101,12 @@ const INTEGRATIONS: Integration[] = [
   { id: "synthesia", name: "Synthesia", desc: "AI presenter videos", category: "Content & Media", domain: "synthesia.io", nangoId: null, status: "coming_soon" },
   { id: "descript", name: "Descript", desc: "AI editing and transcription", category: "Content & Media", domain: "descript.com", nangoId: null, status: "coming_soon" },
   { id: "capcut", name: "CapCut", desc: "Video editing platform", category: "Content & Media", domain: "capcut.com", nangoId: null, status: "coming_soon" },
-];const LOGOS: Record<string, string> = {"gmail.com":"https://upload.wikimedia.org/wikipedia/commons/7/7e/Gmail_icon_%282020%29.s = ["All", ...Array.from(new Set(INTEGRATIONS.map(i => i.category)))];
+];const CATEGORIES = ["All", ...Array.from(new Set(INTEGRATIONS.map(i => i.category)))];
 
 function IntegrationLogo({ domain, name }: { domain: string; name: string }) {
   const [error, setError] = React.useState(false);
-  if (error) {
+  const src = LOGOS[domain];
+  if (error || !src) {
     return (
       <div className="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-white/20 to-white/5 text-xs font-bold text-white">
         {name.slice(0, 2).toUpperCase()}
@@ -111,12 +114,7 @@ function IntegrationLogo({ domain, name }: { domain: string; name: string }) {
     );
   }
   return (
-    <img
-      src={LOGOS[domain] || ""}
-      alt={name}
-      className="w-7 h-7 object-contain rounded"
-      onError={() => setError(true)}
-    />
+    <img src={src} alt={name} className="w-7 h-7 object-contain" onError={() => setError(true)} />
   );
 }
 
@@ -273,7 +271,7 @@ export default function IntegrationsPage() {
                 className={`p-5 rounded-2xl border transition-all ${isConnected ? "border-green-500/30 bg-green-500/[0.03]" : isComingSoon ? "border-white/5 bg-white/[0.01] opacity-60" : "border-white/10 bg-white/[0.02]"}`}>
                 <div className="flex items-start justify-between mb-3">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white bg-opacity-5 border border-white border-opacity-10 p-2 overflow-hidden">
+                    <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 p-1.5 overflow-hidden">
                       <IntegrationLogo domain={integration.domain} name={integration.name} />
                     </div>
                     <div>
@@ -315,7 +313,7 @@ export default function IntegrationsPage() {
         <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="bg-[#111] border border-white/10 rounded-2xl p-6 w-full max-w-md">
             <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white bg-opacity-5 border border-white border-opacity-10 p-2 overflow-hidden">
+              <div className="w-10 h-10 rounded-xl flex items-center justify-center bg-white/5 border border-white/10 p-1.5 overflow-hidden">
                 <IntegrationLogo domain={apiKeyModal.domain} name={apiKeyModal.name} />
               </div>
               <div>
@@ -362,6 +360,3 @@ export default function IntegrationsPage() {
     </Dashboard>
   );
 }
-
-
-
