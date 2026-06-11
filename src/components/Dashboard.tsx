@@ -16,6 +16,7 @@ const Dashboard = ({ children, profile }: { children?: React.ReactNode, profile?
     { icon: <MessageSquare size={18} />, label: "Messages", href: "/dashboard/messages" },
     { icon: <CheckSquare size={18} />, label: "Tasks", href: "/dashboard/tasks" },
     { icon: <Zap size={18} />, label: "Integrations", href: "/dashboard/integrations" },
+    { icon: <CheckSquare size={18} />, label: "Approvals", href: "/dashboard/approvals" },
   ];
 
   const scrollToUpgrade = () => {
