@@ -59,7 +59,7 @@ export default function ApprovalsPage() {
         `${process.env.NEXT_PUBLIC_SUPABASE_URL}/functions/v1/execute-action`,
         {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
+          headers: { 'Content-Type': 'application/json', 'apikey': process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!, 'Authorization': `Bearer ${process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!}` },
           body: JSON.stringify({ approval_id: req.id }),
         }
       );
