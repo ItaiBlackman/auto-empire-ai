@@ -25,6 +25,7 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
   const [emailOutreach, setEmailOutreach] = useState("");
   const [emailFollowup, setEmailFollowup] = useState("");
   const [emailClose, setEmailClose] = useState("");
+  const [followupDays, setFollowupDays] = useState(3);
   const [emailSaving, setEmailSaving] = useState(false);
   const [emailSaved, setEmailSaved] = useState(false);
   const supabase = createClient();
@@ -66,6 +67,7 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
       email_outreach: emailOutreach,
       email_followup: emailFollowup,
       email_close: emailClose,
+      followup_days: followupDays,
     }).eq("id", id);
     setEmailSaving(false);
     setEmailSaved(true);
@@ -87,6 +89,7 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
       setEmailOutreach(biz.email_outreach || "");
       setEmailFollowup(biz.email_followup || "");
       setEmailClose(biz.email_close || "");
+      setFollowupDays(biz.followup_days || 3);
     }
     setLoading(false);
   };
