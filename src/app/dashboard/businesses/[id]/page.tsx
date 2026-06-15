@@ -460,3 +460,4 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
     </Dashboard>
   );
 }
+  
