@@ -15,97 +15,6 @@ import { HedgeFundModule, YouTubeModule, AppFactoryModule, MediaNetworkModule } 
 import { AICommandCenter } from "@/components/AICommandCenter";
 
 
-type EmailsTabProps = {
-  emailOutreach: string; setEmailOutreach: (v: string) => void;
-  emailFollowup: string; setEmailFollowup: (v: string) => void;
-  emailClose: string; setEmailClose: (v: string) => void;
-  followupDays: number; setFollowupDays: (fn: (d: number) => number) => void;
-  onSave: () => void; saving: boolean; saved: boolean;
-};
-
-const EMAIL_TYPES = [
-  { key: "outreach", label: "Outreach", badge: "Email #1", desc: "Sent to new leads", color: "blue" },
-  { key: "followup", label: "Follow-up", badge: "Email #2", desc: "Sent if no reply", color: "yellow" },
-  { key: "close", label: "Close", badge: "Email #3", desc: "Final attempt", color: "green" },
-];
-
-function EmailsTab({ emailOutreach, setEmailOutreach, emailFollowup, setEmailFollowup, emailClose, setEmailClose, followupDays, setFollowupDays, onSave, saving, saved }: EmailsTabProps) {
-  const [activeEmail, setActiveEmail] = useState("outreach");
-
-  const values: Record<string, string> = { outreach: emailOutreach, followup: emailFollowup, close: emailClose };
-  const setters: Record<string, (v: string) => void> = { outreach: setEmailOutreach, followup: setEmailFollowup, close: setEmailClose };
-  const placeholders: Record<string, string> = {
-    outreach: "Hi {name},\n\nI was looking at businesses in {location} and found {company} — but couldn\'t find a website for you.\n\nWe build professional websites for local businesses from $500, live in 48 hours.\n\nWant me to put together a free mockup for {company}?\n\n{agent_name}\nEliteSite Architects",
-    followup: "Hi {name},\n\nFollowing up on my last message about getting {company} online.\n\nBusinesses in your area that get a website see more calls within the first month.\n\nHappy to send a free mockup — takes 10 minutes.\n\n{agent_name}\nEliteSite Architects",
-    close: "Hi {name},\n\nLast message from me.\n\nIf getting {company} online becomes a priority — $500 gets you a professional site live in 48 hours. $99/month keeps it running.\n\nReply anytime.\n\n{agent_name}\nEliteSite Architects",
-  };
-
-  return (
-    <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-      {/* Header */}
-      <div className="px-6 pt-6 pb-0">
-        <div className="flex items-center justify-between mb-5">
-          <div>
-            <h3 className="font-bold text-base">Email Sequences</h3>
-            <p className="text-xs text-gray-500 mt-0.5">Use <code className="text-gray-400 bg-white/5 px-1 rounded">{"{name}"}</code>, <code className="text-gray-400 bg-white/5 px-1 rounded">{"{company}"}</code>, <code className="text-gray-400 bg-white/5 px-1 rounded">{"{location}"}</code> — the agent fills these in.</p>
-          </div>
-          <button
-            onClick={onSave}
-            disabled={saving}
-            className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all ${saved ? "bg-green-500/20 text-green-400 border border-green-500/20" : "bg-white text-black hover:bg-gray-200"} disabled:opacity-50`}
-          >
-            {saved ? <CheckCircle size={13} /> : saving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
-            {saved ? "Saved" : "Save"}
-          </button>
-        </div>
-
-        {/* Email type tabs */}
-        <div className="flex gap-1 border-b border-white/5">
-          {EMAIL_TYPES.map(t => (
-            <button
-              key={t.key}
-              onClick={() => setActiveEmail(t.key)}
-              className={`px-4 py-2.5 text-xs font-bold transition-all border-b-2 -mb-px ${activeEmail === t.key ? "border-white text-white" : "border-transparent text-gray-500 hover:text-gray-300"}`}
-            >
-              <span className={`mr-1.5 text-[10px] px-1.5 py-0.5 rounded font-black ${t.color === "blue" ? "bg-blue-500/20 text-blue-400" : t.color === "yellow" ? "bg-yellow-500/20 text-yellow-400" : "bg-green-500/20 text-green-400"}`}>{t.badge}</span>
-              {t.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      {/* Textarea */}
-      <div className="p-6">
-        <p className="text-[10px] text-gray-500 uppercase tracking-wider mb-3">{EMAIL_TYPES.find(t => t.key === activeEmail)?.desc}</p>
-        <textarea
-          key={activeEmail}
-          value={values[activeEmail]}
-          onChange={e => setters[activeEmail](e.target.value)}
-          rows={10}
-          placeholder={placeholders[activeEmail]}
-          className="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-sm text-white placeholder-gray-700 resize-none focus:outline-none focus:border-white/20 font-mono leading-relaxed"
-        />
-      </div>
-
-      {/* Follow-up timing */}
-      <div className="px-6 pb-6">
-        <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/[0.07]">
-          <div>
-            <p className="text-xs font-bold">Follow-up delay</p>
-            <p className="text-[11px] text-gray-500 mt-0.5">Days with no reply before Email #2 is sent</p>
-          </div>
-          <div className="flex items-center gap-2">
-            <button onClick={() => setFollowupDays((d: number) => Math.max(1, d - 1))} className="w-7 h-7 rounded-lg bg-white/10 text-white text-sm font-bold hover:bg-white/20 transition-colors flex items-center justify-center">−</button>
-            <span className="text-base font-bold w-6 text-center">{followupDays}</span>
-            <button onClick={() => setFollowupDays((d: number) => Math.min(30, d + 1))} className="w-7 h-7 rounded-lg bg-white/10 text-white text-sm font-bold hover:bg-white/20 transition-colors flex items-center justify-center">+</button>
-            <span className="text-xs text-gray-500 ml-1">days</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-}
-
 export default function BusinessDashboardPage({ params }: { params: Promise<{ id: string }> }) {
   const { id } = use(params);
   const [business, setBusiness] = useState<any>(null);
@@ -118,6 +27,7 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
   const [emailFollowup, setEmailFollowup] = useState("");
   const [emailClose, setEmailClose] = useState("");
   const [followupDays, setFollowupDays] = useState(3);
+  const [activeEmailTab, setActiveEmailTab] = useState("outreach");
   const [emailSaving, setEmailSaving] = useState(false);
   const [emailSaved, setEmailSaved] = useState(false);
   const supabase = createClient();
