@@ -64,11 +64,12 @@ export default function ApprovalsPage() {
         }
       );
       const data = await res.json();
-      const msg = data.message || (data.emails_sent > 0 ? `Sent ${data.emails_sent} emails` : 'Approved');
+      const msg = data.message || data.error || 'Done';
       setFeedback(f => ({ ...f, [req.id]: msg }));
-      setTimeout(() => setRequests(r => r.filter(x => x.id !== req.id)), 1500);
+      // Keep card visible for 4 seconds so user can read the result
+      setTimeout(() => setRequests(r => r.filter(x => x.id !== req.id)), 4000);
     } catch (e) {
-      setFeedback(f => ({ ...f, [req.id]: 'Error executing action' }));
+      setFeedback(f => ({ ...f, [req.id]: `Error: ${String(e)}` }));
     }
     setActing(a => ({ ...a, [req.id]: false }));
   }
