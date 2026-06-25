@@ -26,8 +26,6 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
   const [emailSaving, setEmailSaving] = useState(false);
   const [emailSaved, setEmailSaved] = useState(false);
   const [currencySettings, setCurrencySettings] = useState<CurrencyRow[]>(DEFAULT_CURRENCY_SETTINGS);
-  const [pricingSaving, setPricingSaving] = useState(false);
-  const [pricingSaved, setPricingSaved] = useState(false);
   const supabase = createClient();
   const router = useRouter();
 
@@ -59,18 +57,11 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
       email_followup: emailFollowup,
       email_close: emailClose,
       followup_days: followupDays,
+      currency_settings: currencySettings,
     }).eq("id", id);
     setEmailSaving(false);
     setEmailSaved(true);
     setTimeout(() => setEmailSaved(false), 2000);
-  };
-
-  const handleSavePricing = async () => {
-    setPricingSaving(true);
-    await supabase.from("businesses").update({ currency_settings: currencySettings }).eq("id", id);
-    setPricingSaving(false);
-    setPricingSaved(true);
-    setTimeout(() => setPricingSaved(false), 2000);
   };
 
   useEffect(() => { fetchData(); }, [id]);
@@ -89,7 +80,7 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
       setEmailFollowup(biz.email_followup || "");
       setEmailClose(biz.email_close || "");
       setFollowupDays(biz.followup_days || 3);
-      setCurrencySettings(Array.isArray(biz.currency_settings) ? biz.currency_settings : DEFAULT_CURRENCY_SETTINGS);
+      setCurrencySettings(biz.currency_settings || DEFAULT_CURRENCY_SETTINGS);
     }
     setLoading(false);
   };
@@ -183,75 +174,63 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
                   <div className="flex items-center justify-between mb-4">
                     <h2 className="text-sm font-black uppercase tracking-[0.2em] text-gray-500">Business Intelligence</h2>
                     <div className="flex gap-1">
-                      {["Overview", "Analytics", "Operations", "Emails", "Pricing", "Settings"].map(t => (
+                      {["Overview", "Analytics", "Operations", "Emails", "Settings"].map(t => (
                         <button key={t} onClick={() => setActiveTab(t.toLowerCase())}
                           className={"px-3 py-1 rounded-md text-[10px] font-bold transition-all flex items-center gap-1 " + (activeTab === t.toLowerCase() ? "bg-white/10 text-white" : "text-gray-600 hover:text-gray-400")}>
-                          {t === "Emails" && <Mail size={10} />}
-                          {t === "Pricing" && <DollarSign size={10} />}
-                          {t}
+                          {t === "Emails" && <Mail size={10} />}{t}
                         </button>
                       ))}
                     </div>
                   </div>
 
                   {activeTab === "emails" && (
-                    <div className="rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
-                      <div className="px-6 pt-6">
-                        <div className="flex items-center justify-between mb-5">
-                          <div>
-                            <h3 className="font-bold text-base">Email Sequences</h3>
-                            <p className="text-xs text-gray-500 mt-0.5">Use {"{name}"}, {"{company}"}, {"{industry}"}, {"{agent_name}"} as placeholders.</p>
-                          </div>
-                          <button onClick={handleSaveEmails} disabled={emailSaving}
-                            className={"flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all disabled:opacity-50 " + (emailSaved ? "bg-green-500/20 text-green-400 border border-green-500/20" : "bg-white text-black hover:bg-gray-200")}>
-                            {emailSaved ? <CheckCircle size={13} /> : emailSaving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
-                            {emailSaved ? "Saved" : "Save"}
-                          </button>
-                        </div>
-                        <div className="flex gap-1 border-b border-white/5 mb-0">
-                          {emailTypes.map(t => (
-                            <button key={t.key} onClick={() => setActiveEmailTab(t.key)}
-                              className={"px-4 py-2.5 text-xs font-bold transition-all border-b-2 -mb-px flex items-center gap-1.5 " + (activeEmailTab === t.key ? "border-white text-white" : "border-transparent text-gray-500 hover:text-gray-300")}>
-                              <span className={"text-[10px] px-1.5 py-0.5 rounded font-black " + t.color}>{t.badge}</span>
-                              {t.label}
+                    <div className="flex gap-4 items-start">
+                      <div className="flex-1 rounded-2xl border border-white/10 bg-white/[0.02] overflow-hidden">
+                        <div className="px-6 pt-6">
+                          <div className="flex items-center justify-between mb-5">
+                            <div>
+                              <h3 className="font-bold text-base">Email Sequences</h3>
+                              <p className="text-xs text-gray-500 mt-0.5">Use name, company, industry, agent_name as placeholders.</p>
+                            </div>
+                            <button onClick={handleSaveEmails} disabled={emailSaving}
+                              className={"flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all disabled:opacity-50 " + (emailSaved ? "bg-green-500/20 text-green-400 border border-green-500/20" : "bg-white text-black hover:bg-gray-200")}>
+                              {emailSaved ? <CheckCircle size={13} /> : emailSaving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
+                              {emailSaved ? "Saved" : "Save"}
                             </button>
-                          ))}
-                        </div>
-                      </div>
-                      <div className="p-6">
-                        <textarea
-                          value={emailValues[activeEmailTab]}
-                          onChange={e => emailSetters[activeEmailTab](e.target.value)}
-                          rows={10}
-                          placeholder="Hi {name}, write your message here..."
-                          className="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-sm text-white placeholder-gray-700 resize-none focus:outline-none focus:border-white/20 font-mono leading-relaxed"
-                        />
-                      </div>
-                      <div className="px-6 pb-6">
-                        <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/[0.07]">
-                          <div>
-                            <p className="text-xs font-bold">Follow-up delay</p>
-                            <p className="text-[11px] text-gray-500 mt-0.5">Days with no reply before Email 2 is sent</p>
                           </div>
-                          <div className="flex items-center gap-2">
-                            <button onClick={() => setFollowupDays(d => Math.max(1, d - 1))} className="w-7 h-7 rounded-lg bg-white/10 text-white font-bold hover:bg-white/20 transition-colors flex items-center justify-center">-</button>
-                            <span className="text-base font-bold w-6 text-center">{followupDays}</span>
-                            <button onClick={() => setFollowupDays(d => Math.min(30, d + 1))} className="w-7 h-7 rounded-lg bg-white/10 text-white font-bold hover:bg-white/20 transition-colors flex items-center justify-center">+</button>
-                            <span className="text-xs text-gray-500 ml-1">days</span>
+                          <div className="flex gap-1 border-b border-white/5 mb-0">
+                            {emailTypes.map(t => (
+                              <button key={t.key} onClick={() => setActiveEmailTab(t.key)}
+                                className={"px-4 py-2.5 text-xs font-bold transition-all border-b-2 -mb-px flex items-center gap-1.5 " + (activeEmailTab === t.key ? "border-white text-white" : "border-transparent text-gray-500 hover:text-gray-300")}>
+                                <span className={"text-[10px] px-1.5 py-0.5 rounded font-black " + t.color}>{t.badge}</span>
+                                {t.label}
+                              </button>
+                            ))}
                           </div>
                         </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {activeTab === "pricing" && (
-                    <div className="space-y-4">
-                      <div className="flex justify-end">
-                        <button onClick={handleSavePricing} disabled={pricingSaving}
-                          className={"flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-lg transition-all disabled:opacity-50 " + (pricingSaved ? "bg-green-500/20 text-green-400 border border-green-500/20" : "bg-white text-black hover:bg-gray-200")}>
-                          {pricingSaved ? <CheckCircle size={13} /> : pricingSaving ? <Loader2 size={13} className="animate-spin" /> : <Save size={13} />}
-                          {pricingSaved ? "Saved" : "Save Pricing"}
-                        </button>
+                        <div className="p-6">
+                          <textarea
+                            value={emailValues[activeEmailTab]}
+                            onChange={e => emailSetters[activeEmailTab](e.target.value)}
+                            rows={10}
+                            placeholder="Hi {name}, write your message here... Use {name} {company} {industry} {agent_name}"
+                            className="w-full bg-black/30 border border-white/10 rounded-xl p-4 text-sm text-white placeholder-gray-700 resize-none focus:outline-none focus:border-white/20 font-mono leading-relaxed"
+                          />
+                        </div>
+                        <div className="px-6 pb-6">
+                          <div className="flex items-center justify-between p-4 rounded-xl bg-white/5 border border-white/[0.07]">
+                            <div>
+                              <p className="text-xs font-bold">Follow-up delay</p>
+                              <p className="text-[11px] text-gray-500 mt-0.5">Days with no reply before Email 2 is sent</p>
+                            </div>
+                            <div className="flex items-center gap-2">
+                              <button onClick={() => setFollowupDays(d => Math.max(1, d - 1))} className="w-7 h-7 rounded-lg bg-white/10 text-white font-bold hover:bg-white/20 transition-colors flex items-center justify-center">-</button>
+                              <span className="text-base font-bold w-6 text-center">{followupDays}</span>
+                              <button onClick={() => setFollowupDays(d => Math.min(30, d + 1))} className="w-7 h-7 rounded-lg bg-white/10 text-white font-bold hover:bg-white/20 transition-colors flex items-center justify-center">+</button>
+                              <span className="text-xs text-gray-500 ml-1">days</span>
+                            </div>
+                          </div>
+                        </div>
                       </div>
                       <CurrencySettingsPanel settings={currencySettings} onChange={setCurrencySettings} />
                     </div>
@@ -281,7 +260,7 @@ export default function BusinessDashboardPage({ params }: { params: Promise<{ id
                     </div>
                   )}
 
-                  {activeTab !== "emails" && activeTab !== "pricing" && activeTab !== "settings" && renderBusinessModule()}
+                  {activeTab !== "emails" && activeTab !== "settings" && renderBusinessModule()}
                 </section>
 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
