@@ -22,8 +22,9 @@ interface Props {
 }
 
 export function CurrencySettingsPanel({ settings, onChange }: Props) {
+  const safeSettings = Array.isArray(settings) ? settings : DEFAULT_CURRENCY_SETTINGS;
   const update = (index: number, field: string, value: string | number) => {
-    onChange(settings.map((row, i) => i === index ? { ...row, [field]: value } : row));
+    onChange(safeSettings.map((row, i) => i === index ? { ...row, [field]: value } : row));
   };
 
   return (
@@ -33,7 +34,7 @@ export function CurrencySettingsPanel({ settings, onChange }: Props) {
         <p className="text-[10px] text-gray-500 mt-0.5">Set currency and prices per market</p>
       </div>
       <div className="p-3 space-y-1 max-h-[420px] overflow-y-auto">
-        {settings.map((row, i) => (
+        {safeSettings.map((row, i) => (
           <div key={row.language} className="p-2.5 rounded-xl bg-white/[0.03] border border-white/[0.05]">
             <div className="flex items-center gap-1.5 mb-2">
               <span className="text-[10px] font-black text-gray-500 bg-white/10 px-1.5 py-0.5 rounded">{row.flag}</span>
