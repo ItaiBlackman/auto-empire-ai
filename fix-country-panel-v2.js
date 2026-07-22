@@ -1,41 +1,43 @@
-"use client";
+const fs = require("fs");
+
+fs.writeFileSync("src/components/CurrencySettingsPanel.tsx", `"use client";
 import React, { useState, useRef, useEffect } from "react";
 import { Plus, X, Search, ChevronDown } from "lucide-react";
 
 export const DEFAULT_CURRENCY_SETTINGS = [
-  { country: "Israel",         code: "IL", currency: "₪", setup: 1800,  monthly: 350  },
+  { country: "Israel",         code: "IL", currency: "\u20AA", setup: 1800,  monthly: 350  },
   { country: "United States",  code: "US", currency: "$",      setup: 500,   monthly: 99   },
-  { country: "United Kingdom", code: "UK", currency: "£", setup: 400,   monthly: 79   },
-  { country: "France",         code: "FR", currency: "€", setup: 450,   monthly: 90   },
-  { country: "Germany",        code: "DE", currency: "€", setup: 450,   monthly: 90   },
-  { country: "Spain",          code: "ES", currency: "€", setup: 450,   monthly: 90   },
-  { country: "Italy",          code: "IT", currency: "€", setup: 450,   monthly: 90   },
-  { country: "Russia",         code: "RU", currency: "₽", setup: 45000, monthly: 9000 },
+  { country: "United Kingdom", code: "UK", currency: "\u00A3", setup: 400,   monthly: 79   },
+  { country: "France",         code: "FR", currency: "\u20AC", setup: 450,   monthly: 90   },
+  { country: "Germany",        code: "DE", currency: "\u20AC", setup: 450,   monthly: 90   },
+  { country: "Spain",          code: "ES", currency: "\u20AC", setup: 450,   monthly: 90   },
+  { country: "Italy",          code: "IT", currency: "\u20AC", setup: 450,   monthly: 90   },
+  { country: "Russia",         code: "RU", currency: "\u20BD", setup: 45000, monthly: 9000 },
   { country: "Saudi Arabia",   code: "SA", currency: "SAR",    setup: 1875,  monthly: 371  },
   { country: "UAE",            code: "AE", currency: "AED",    setup: 1835,  monthly: 363  },
   { country: "Canada",         code: "CA", currency: "CA$",    setup: 675,   monthly: 134  },
   { country: "Australia",      code: "AU", currency: "A$",     setup: 765,   monthly: 151  },
-  { country: "India",          code: "IN", currency: "₹", setup: 41500, monthly: 8200 },
-  { country: "Japan",          code: "JP", currency: "¥", setup: 75000, monthly: 14800},
+  { country: "India",          code: "IN", currency: "\u20B9", setup: 41500, monthly: 8200 },
+  { country: "Japan",          code: "JP", currency: "\u00A5", setup: 75000, monthly: 14800},
 ];
 
 export type CurrencyRow = typeof DEFAULT_CURRENCY_SETTINGS[0];
 
 const ALL_CURRENCIES = [
   { symbol: "$",    name: "US Dollar" },
-  { symbol: "€",    name: "Euro" },
-  { symbol: "£",    name: "British Pound" },
-  { symbol: "₪",    name: "Israeli Shekel" },
-  { symbol: "¥",    name: "Yen / Yuan" },
+  { symbol: "\u20AC",    name: "Euro" },
+  { symbol: "\u00A3",    name: "British Pound" },
+  { symbol: "\u20AA",    name: "Israeli Shekel" },
+  { symbol: "\u00A5",    name: "Yen / Yuan" },
   { symbol: "CA$",  name: "Canadian Dollar" },
   { symbol: "A$",   name: "Australian Dollar" },
   { symbol: "NZ$",  name: "New Zealand Dollar" },
   { symbol: "HK$",  name: "Hong Kong Dollar" },
   { symbol: "S$",   name: "Singapore Dollar" },
-  { symbol: "₽",    name: "Russian Ruble" },
-  { symbol: "₹",    name: "Indian Rupee" },
-  { symbol: "₩",    name: "South Korean Won" },
-  { symbol: "₺",    name: "Turkish Lira" },
+  { symbol: "\u20BD",    name: "Russian Ruble" },
+  { symbol: "\u20B9",    name: "Indian Rupee" },
+  { symbol: "\u20A9",    name: "South Korean Won" },
+  { symbol: "\u20BA",    name: "Turkish Lira" },
   { symbol: "R$",   name: "Brazilian Real" },
   { symbol: "MX$",  name: "Mexican Peso" },
   { symbol: "R",    name: "South African Rand" },
@@ -48,13 +50,13 @@ const ALL_CURRENCIES = [
   { symbol: "OMR",  name: "Omani Rial" },
   { symbol: "EGP",  name: "Egyptian Pound" },
   { symbol: "MAD",  name: "Moroccan Dirham" },
-  { symbol: "₦",    name: "Nigerian Naira" },
+  { symbol: "\u20A6",    name: "Nigerian Naira" },
   { symbol: "Ksh",  name: "Kenyan Shilling" },
-  { symbol: "฿",    name: "Thai Baht" },
-  { symbol: "₫",    name: "Vietnamese Dong" },
+  { symbol: "\u0E3F",    name: "Thai Baht" },
+  { symbol: "\u20AB",    name: "Vietnamese Dong" },
   { symbol: "Rp",   name: "Indonesian Rupiah" },
   { symbol: "RM",   name: "Malaysian Ringgit" },
-  { symbol: "₱",    name: "Philippine Peso" },
+  { symbol: "\u20B1",    name: "Philippine Peso" },
   { symbol: "PKR",  name: "Pakistani Rupee" },
   { symbol: "BDT",  name: "Bangladeshi Taka" },
   { symbol: "zl",   name: "Polish Zloty" },
@@ -280,3 +282,6 @@ export function CurrencySettingsPanel({ settings, onChange }: Props) {
     </div>
   );
 }
+`, "utf8");
+
+console.log("Done. Run: git add . && git commit -m 'fix country panel plus button and dropdown' && git push");
