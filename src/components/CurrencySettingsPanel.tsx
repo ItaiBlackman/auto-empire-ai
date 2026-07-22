@@ -255,23 +255,25 @@ export function CurrencySettingsPanel({ settings, onChange }: Props) {
 
       <div className="px-6 py-5 mt-1 border-t border-white/5">
         <p className="text-xs font-bold text-gray-400 mb-3">Add a country</p>
-        <div className="grid grid-cols-[2fr_100px_1fr_1fr_36px] gap-3 items-center">
+        <div className="flex gap-3 items-center">
           <input
             value={newCountry}
             onChange={e => setNewCountry(e.target.value)}
             onKeyDown={e => e.key === "Enter" && addRow()}
             placeholder="e.g. Brazil"
-            className="bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-700 focus:outline-none focus:border-white/30"
+            className="flex-1 bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-gray-700 focus:outline-none focus:border-white/30 min-w-0"
           />
-          <CurrencyPicker value={newCurrency} onChange={setNewCurrency} />
+          <div className="w-24 shrink-0">
+            <CurrencyPicker value={newCurrency} onChange={setNewCurrency} />
+          </div>
           <input type="number" value={newSetup} onChange={e => setNewSetup(Number(e.target.value))}
-            className="bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-white/30" />
+            className="w-20 shrink-0 bg-black/40 border border-white/10 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-white/30" />
           <input type="number" value={newMonthly} onChange={e => setNewMonthly(Number(e.target.value))}
-            className="bg-black/40 border border-white/10 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-white/30" />
+            className="w-20 shrink-0 bg-black/40 border border-white/10 rounded-lg px-2 py-2 text-sm text-white focus:outline-none focus:border-white/30" />
           <button
             onClick={addRow}
             disabled={!newCountry.trim()}
-            className="w-8 h-8 flex items-center justify-center rounded-lg bg-white text-black hover:bg-gray-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed shrink-0"
+            className="w-8 h-8 shrink-0 flex items-center justify-center rounded-lg bg-white text-black hover:bg-gray-200 transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
           >
             <Plus size={14} />
           </button>
