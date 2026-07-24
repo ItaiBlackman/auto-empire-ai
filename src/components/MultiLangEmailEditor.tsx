@@ -21,22 +21,25 @@ interface Props {
 }
 
 async function generateForLanguage(lang: string, baseTemplate: string): Promise<string> {
-  const prompt = "You are a native " + lang + " speaker writing a casual WhatsApp sales message to a local business owner.
-
-Here is the English template to adapt into " + lang + ":
----
-" + baseTemplate + "
----
-
-Rules:
-- Write it fresh in " + lang + " as if you are a real local person, NOT a word-for-word translation
-- Keep the exact same meaning, facts, structure, and placeholders
-- Placeholders to keep exactly as-is: {name}, {company}, {industry}, {agent_name}, {setup_price}, {monthly_price}
-- Sound casual and friendly, like a real WhatsApp message from a local person
-- Keep brand names as-is
-- Do not add or remove any facts
-
-Return ONLY the " + lang + " message. No labels, no explanations.";
+  const lines = [
+    "You are a native " + lang + " speaker writing a casual WhatsApp sales message to a local business owner.",
+    "",
+    "Here is the English template to adapt into " + lang + ":",
+    "---",
+    baseTemplate,
+    "---",
+    "",
+    "Rules:",
+    "- Write it fresh in " + lang + " as if you are a real local person, NOT a word-for-word translation",
+    "- Keep the exact same meaning, facts, structure, and placeholders",
+    "- Placeholders to keep exactly as-is: {name}, {company}, {industry}, {agent_name}, {setup_price}, {monthly_price}",
+    "- Sound casual and friendly, like a real WhatsApp message from a local person",
+    "- Keep brand names as-is",
+    "- Do not add or remove any facts",
+    "",
+    "Return ONLY the " + lang + " message. No labels, no explanations.",
+  ];
+  const prompt = lines.join("\n");
   try {
     const res = await fetch("https://api.anthropic.com/v1/messages", {
       method: "POST",
@@ -121,7 +124,6 @@ export function MultiLangEmailEditor({ label, badge, badgeColor, baseTemplate, v
             </span>
           </button>
         ))}
-
         <div ref={addBtnRef}>
           <button
             onClick={openDropdown}
