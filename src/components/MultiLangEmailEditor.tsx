@@ -1,9 +1,9 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { Plus, X, RefreshCcw, ChevronDown, Loader2 } from "lucide-react";
 
 const LANGUAGES = [
-  "Hebrew", "Arabic", "English", "French", "German", "Spanish", "Italian",
+  "Hebrew", "Arabic", "French", "German", "Spanish", "Italian",
   "Russian", "Portuguese", "Turkish", "Dutch", "Polish", "Japanese", "Chinese",
   "Hindi", "Korean", "Swedish", "Norwegian", "Danish", "Finnish", "Greek",
   "Romanian", "Hungarian", "Czech", "Ukrainian",
@@ -15,15 +15,59 @@ interface Props {
   label: string;
   badge: string;
   badgeColor: string;
-  baseTemplate: string; // English version (the main textarea)
+  baseTemplate: string;
   versions: LangVersion[];
   onVersionsChange: (versions: LangVersion[]) => void;
+}
+
+async function generateForLanguage(lang: string, baseTemplate: string): Promise<string> {
+  const prompt = "You are a native " + lang + " speaker writing a casual WhatsApp sales message to a local business owner.
+
+Here is the English template to adapt into " + lang + ":
+---
+" + baseTemplate + "
+---
+
+Rules:
+- Write it fresh in " + lang + " as if you are a real local person, NOT a word-for-word translation
+- Keep the exact same meaning, facts, structure, and placeholders
+- Placeholders to keep exactly as-is: {name}, {company}, {industry}, {agent_name}, {setup_price}, {monthly_price}
+- Sound casual and friendly, like a real WhatsApp message from a local person
+- Keep brand names as-is
+- Do not add or remove any facts
+
+Return ONLY the " + lang + " message. No labels, no explanations.";
+  try {
+    const res = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "claude-sonnet-4-6",
+        max_tokens: 1000,
+        messages: [{ role: "user", content: prompt }]
+      })
+    });
+    const data = await res.json();
+    return data.content?.[0]?.text || baseTemplate;
+  } catch {
+    return baseTemplate;
+  }
 }
 
 export function MultiLangEmailEditor({ label, badge, badgeColor, baseTemplate, versions, onVersionsChange }: Props) {
   const [showDropdown, setShowDropdown] = useState(false);
   const [generating, setGenerating] = useState<string | null>(null);
   const [activeVersion, setActiveVersion] = useState<string | null>(null);
+  const [dropdownPos, setDropdownPos] = useState({ top: 0, left: 0 });
+  const addBtnRef = useRef<HTMLDivElement>(null);
+
+  const openDropdown = () => {
+    if (addBtnRef.current) {
+      const rect = addBtnRef.current.getBoundingClientRect();
+      setDropdownPos({ top: rect.bottom + 4, left: rect.left });
+    }
+    setShowDropdown(o => !o);
+  };
 
   const addLanguage = async (lang: string) => {
     setShowDropdown(false);
@@ -32,44 +76,9 @@ export function MultiLangEmailEditor({ label, badge, badgeColor, baseTemplate, v
       return;
     }
     setGenerating(lang);
-    try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-6",
-          max_tokens: 1000,
-          messages: [{
-            role: "user",
-            content: `You are a native ${lang} speaker writing a casual WhatsApp sales message to a local business owner.
-
-Here is the English template to adapt into ${lang}:
----
-${baseTemplate}
----
-
-Rules:
-- Write it fresh in ${lang} as if you are a real local person, NOT a word-for-word translation
-- Keep the exact same meaning, facts, structure, and placeholders ({name}, {company}, {industry}, {agent_name}, {setup_price}, {monthly_price})
-- Sound casual and friendly, like a real WhatsApp message
-- Keep all placeholders EXACTLY as they are in curly braces
-- Keep brand names as-is (EliteSite Architects, AutoEmpire AI)
-- Do not add or remove any facts
-
-Return ONLY the ${lang} message. No labels, no explanations.`
-          }]
-        })
-      });
-      const data = await res.json();
-      const generated = data.content?.[0]?.text || baseTemplate;
-      const newVersions = [...versions, { language: lang, content: generated }];
-      onVersionsChange(newVersions);
-      setActiveVersion(lang);
-    } catch {
-      const newVersions = [...versions, { language: lang, content: baseTemplate }];
-      onVersionsChange(newVersions);
-      setActiveVersion(lang);
-    }
+    const generated = await generateForLanguage(lang, baseTemplate);
+    onVersionsChange([...versions, { language: lang, content: generated }]);
+    setActiveVersion(lang);
     setGenerating(null);
   };
 
@@ -84,47 +93,16 @@ Return ONLY the ${lang} message. No labels, no explanations.`
 
   const regenerate = async (lang: string) => {
     setGenerating(lang);
-    try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-sonnet-4-6",
-          max_tokens: 1000,
-          messages: [{
-            role: "user",
-            content: `You are a native ${lang} speaker writing a casual WhatsApp sales message to a local business owner.
-
-Here is the English template to adapt into ${lang}:
----
-${baseTemplate}
----
-
-Rules:
-- Write it fresh in ${lang} as if you are a real local person, NOT a word-for-word translation
-- Keep the exact same meaning, facts, structure, and placeholders ({name}, {company}, {industry}, {agent_name}, {setup_price}, {monthly_price})
-- Sound casual and friendly, like a real WhatsApp message
-- Keep all placeholders EXACTLY as they are in curly braces
-- Keep brand names as-is
-- Do not add or remove any facts
-
-Return ONLY the ${lang} message. No labels, no explanations.`
-          }]
-        })
-      });
-      const data = await res.json();
-      const generated = data.content?.[0]?.text || baseTemplate;
-      onVersionsChange(versions.map(v => v.language === lang ? { ...v, content: generated } : v));
-    } catch {}
+    const generated = await generateForLanguage(lang, baseTemplate);
+    onVersionsChange(versions.map(v => v.language === lang ? { ...v, content: generated } : v));
     setGenerating(null);
   };
 
-  const availableLanguages = LANGUAGES.filter(l => l !== "English" && !versions.find(v => v.language === l));
+  const availableLanguages = LANGUAGES.filter(l => !versions.find(v => v.language === l));
   const activeVersionData = versions.find(v => v.language === activeVersion);
 
   return (
     <div className="mt-3">
-      {/* Language version pills */}
       <div className="flex items-center gap-2 flex-wrap">
         {versions.map(v => (
           <button
@@ -133,7 +111,7 @@ Return ONLY the ${lang} message. No labels, no explanations.`
             className={"flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-bold transition-all " +
               (activeVersion === v.language ? "bg-white text-black" : "bg-white/10 text-gray-300 hover:bg-white/20")}
           >
-            {generating === v.language ? <Loader2 size={10} className="animate-spin" /> : null}
+            {generating === v.language && <Loader2 size={10} className="animate-spin" />}
             {v.language}
             <span
               onClick={e => { e.stopPropagation(); removeLanguage(v.language); }}
@@ -144,37 +122,38 @@ Return ONLY the ${lang} message. No labels, no explanations.`
           </button>
         ))}
 
-        {/* Add language button */}
-        <div className="relative">
+        <div ref={addBtnRef}>
           <button
-            onClick={() => setShowDropdown(o => !o)}
+            onClick={openDropdown}
             className="flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-white/5 border border-white/10 text-gray-400 hover:bg-white/10 transition-all"
           >
-            <Plus size={10} /> Add language
-            <ChevronDown size={10} />
+            <Plus size={10} /> Add language <ChevronDown size={10} />
           </button>
-          {showDropdown && (
-            <>
-              <div className="fixed inset-0 z-40" onClick={() => setShowDropdown(false)} />
-              <div className="absolute z-50 top-full mt-1 left-0 w-48 bg-[#111] border border-white/10 rounded-xl shadow-2xl overflow-hidden">
-                <div className="max-h-56 overflow-y-auto p-1">
-                  {availableLanguages.map(lang => (
-                    <button
-                      key={lang}
-                      onClick={() => addLanguage(lang)}
-                      className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-white/10 rounded-lg transition-colors"
-                    >
-                      {lang}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            </>
-          )}
         </div>
       </div>
 
-      {/* Active version editor */}
+      {showDropdown && (
+        <>
+          <div className="fixed inset-0 z-[9998]" onClick={() => setShowDropdown(false)} />
+          <div
+            className="fixed z-[9999] w-48 bg-[#111] border border-white/10 rounded-xl shadow-2xl overflow-hidden"
+            style={{ top: dropdownPos.top, left: dropdownPos.left }}
+          >
+            <div className="max-h-56 overflow-y-auto p-1">
+              {availableLanguages.map(lang => (
+                <button
+                  key={lang}
+                  onClick={() => addLanguage(lang)}
+                  className="w-full text-left px-3 py-2 text-xs text-gray-300 hover:bg-white/10 rounded-lg transition-colors"
+                >
+                  {lang}
+                </button>
+              ))}
+            </div>
+          </div>
+        </>
+      )}
+
       {activeVersion && activeVersionData && (
         <div className="mt-3 rounded-xl border border-white/10 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5">
@@ -184,9 +163,7 @@ Return ONLY the ${lang} message. No labels, no explanations.`
               disabled={generating === activeVersion}
               className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold rounded-lg bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-50"
             >
-              {generating === activeVersion
-                ? <Loader2 size={10} className="animate-spin" />
-                : <RefreshCcw size={10} />}
+              {generating === activeVersion ? <Loader2 size={10} className="animate-spin" /> : <RefreshCcw size={10} />}
               Regenerate
             </button>
           </div>
