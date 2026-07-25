@@ -21,37 +21,14 @@ interface Props {
 }
 
 async function generateForLanguage(lang: string, baseTemplate: string): Promise<string> {
-  const lines = [
-    "You are a native " + lang + " speaker writing a casual WhatsApp sales message to a local business owner.",
-    "",
-    "Here is the English template to adapt into " + lang + ":",
-    "---",
-    baseTemplate,
-    "---",
-    "",
-    "Rules:",
-    "- Write it fresh in " + lang + " as if you are a real local person, NOT a word-for-word translation",
-    "- Keep the exact same meaning, facts, structure, and placeholders",
-    "- Placeholders to keep exactly as-is: {name}, {company}, {industry}, {agent_name}, {setup_price}, {monthly_price}",
-    "- Sound casual and friendly, like a real WhatsApp message from a local person",
-    "- Keep brand names as-is",
-    "- Do not add or remove any facts",
-    "",
-    "Return ONLY the " + lang + " message. No labels, no explanations.",
-  ];
-  const prompt = lines.join("\n");
   try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
+    const res = await fetch("https://aoeundhgmxfevkecnmvo.supabase.co/functions/v1/generate-email-version", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "claude-sonnet-4-6",
-        max_tokens: 1000,
-        messages: [{ role: "user", content: prompt }]
-      })
+      body: JSON.stringify({ lang, baseTemplate })
     });
     const data = await res.json();
-    return data.content?.[0]?.text || baseTemplate;
+    return data.content || baseTemplate;
   } catch {
     return baseTemplate;
   }
@@ -95,7 +72,6 @@ export function MultiLangEmailEditor({ label, badge, badgeColor, baseTemplate, v
   };
 
   const regenerate = async (lang: string) => {
-    console.log("Regenerating for language:", lang);
     setGenerating(lang);
     const generated = await generateForLanguage(lang, baseTemplate);
     onVersionsChange(versions.map(v => v.language === lang ? { ...v, content: generated } : v));
@@ -163,10 +139,10 @@ export function MultiLangEmailEditor({ label, badge, badgeColor, baseTemplate, v
             <p className="text-xs font-bold text-gray-300">{activeVersion} version</p>
             <button
               onClick={() => { const lang = activeVersion; if (lang) regenerate(lang); }}
-              disabled={generating === activeVersion}
+              disabled={!!generating}
               className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold rounded-lg bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-50"
             >
-              {generating === activeVersion ? <Loader2 size={10} className="animate-spin" /> : <RefreshCcw size={10} />}
+              {generating ? <Loader2 size={10} className="animate-spin" /> : <RefreshCcw size={10} />}
               Regenerate
             </button>
           </div>
