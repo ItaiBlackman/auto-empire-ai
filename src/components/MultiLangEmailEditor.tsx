@@ -150,7 +150,7 @@ export function MultiLangEmailEditor({ label, badge, badgeColor, baseTemplate, v
             value={activeVersionData.content}
             onChange={e => updateContent(activeVersion, e.target.value)}
             rows={8}
-            className="w-full bg-black/40 p-4 text-sm text-white resize-none focus:outline-none font-mono leading-relaxed"
+            className="w-full bg-black/40 p-4 text-sm text-white resize-none focus:outline-none font-mono leading-relaxed" dir="auto"
           />
         </div>
       )}
