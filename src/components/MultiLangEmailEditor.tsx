@@ -136,7 +136,7 @@ export function MultiLangEmailEditor({ label, badge, badgeColor, baseTemplate, v
       {activeVersion && activeVersionData && (
         <div className="mt-3 rounded-xl border border-white/10 overflow-hidden">
           <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5">
-            <p className="text-xs font-bold text-gray-300">{activeVersion} version</p>
+            <div className="flex items-center gap-2"><p className="text-xs font-bold text-gray-300">{activeVersion} version</p><button onClick={() => setActiveVersion(null)} className="text-gray-600 hover:text-gray-300 transition-colors"><X size={12} /></button></div>
             <button
               onClick={() => { const lang = activeVersion; if (lang) regenerate(lang); }}
               disabled={!!generating}
