@@ -95,6 +95,7 @@ export function MultiLangEmailEditor({ label, badge, badgeColor, baseTemplate, v
   };
 
   const regenerate = async (lang: string) => {
+    console.log("Regenerating for language:", lang);
     setGenerating(lang);
     const generated = await generateForLanguage(lang, baseTemplate);
     onVersionsChange(versions.map(v => v.language === lang ? { ...v, content: generated } : v));
@@ -161,7 +162,7 @@ export function MultiLangEmailEditor({ label, badge, badgeColor, baseTemplate, v
           <div className="flex items-center justify-between px-4 py-2 bg-white/5 border-b border-white/5">
             <p className="text-xs font-bold text-gray-300">{activeVersion} version</p>
             <button
-              onClick={() => regenerate(activeVersion)}
+              onClick={() => { const lang = activeVersion; if (lang) regenerate(lang); }}
               disabled={generating === activeVersion}
               className="flex items-center gap-1.5 px-3 py-1 text-[10px] font-bold rounded-lg bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-50"
             >
