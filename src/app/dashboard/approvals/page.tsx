@@ -233,7 +233,7 @@ export default function ApprovalsPage() {
                   srcDoc={previewBuild.generated_html}
                   className="w-full h-full border-0"
                   title="Website Preview"
-                  sandbox="allow-scripts"
+                  sandbox="allow-scripts allow-same-origin"
                 />
               ) : (
                 <div className="flex items-center justify-center h-full text-gray-500">
