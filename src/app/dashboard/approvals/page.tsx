@@ -10,7 +10,6 @@ export default function ApprovalsPage() {
   const [loading, setLoading] = useState(true);
   const [profile, setProfile] = useState<any>(null);
   const [processing, setProcessing] = useState<string | null>(null);
-  const [previewBuild, setPreviewBuild] = useState<any | null>(null);
   const [collapsed, setCollapsed] = useState<Record<string, boolean>>({});
   const supabase = createClient();
 
@@ -100,8 +99,12 @@ export default function ApprovalsPage() {
   const openPreview = async (approval: any) => {
     const buildId = approval.metadata?.build_id;
     if (!buildId) return;
-    const { data: build } = await supabase.from("website_builds").select("*").eq("id", buildId).single();
-    if (build) setPreviewBuild(build);
+    const { data: build } = await supabase.from("website_builds").select("generated_html").eq("id", buildId).single();
+    if (build?.generated_html) {
+      const blob = new Blob([build.generated_html], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+      window.open(url, "_blank");
+    }
   };
 
   const toggleCollapse = (bizId: string) => {
@@ -209,41 +212,6 @@ export default function ApprovalsPage() {
             ))}
           </div>
         )}
-
-        {/* Website Preview Modal */}
-        {previewBuild && (
-          <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 flex flex-col" onClick={() => setPreviewBuild(null)}>
-            <div className="flex items-center justify-between px-6 py-4 bg-black/90 border-b border-white/10" onClick={e => e.stopPropagation()}>
-              <div>
-                <h2 className="font-bold">{previewBuild.lead_name}</h2>
-                <p className="text-xs text-gray-500">{previewBuild.business_type} &bull; {previewBuild.domain}</p>
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="flex gap-1">
-                  {(previewBuild.colors || []).map((c: string, i: number) => (
-                    <div key={i} className="w-4 h-4 rounded-full border border-white/20" style={{ backgroundColor: c }} />
-                  ))}
-                </div>
-                <button onClick={() => setPreviewBuild(null)} className="text-gray-500 hover:text-white text-xl leading-none">&times;</button>
-              </div>
-            </div>
-            <div className="flex-1 overflow-hidden" onClick={e => e.stopPropagation()}>
-              {previewBuild.generated_html ? (
-                <iframe
-                  srcDoc={previewBuild.generated_html}
-                  className="w-full h-full border-0"
-                  title="Website Preview"
-                  sandbox="allow-scripts allow-same-origin"
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full text-gray-500">
-                  <Loader2 className="animate-spin mr-2" size={20} /> Generating website...
-                </div>
-              )}
-            </div>
-          </div>
-        )}
-      </div>
-    </Dashboard>
+      </Dashboard>
   );
 }
