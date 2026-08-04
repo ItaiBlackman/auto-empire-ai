@@ -212,6 +212,8 @@ export default function ApprovalsPage() {
             ))}
           </div>
         )}
-      </Dashboard>
+      </div>
+    </Dashboard>
   );
 }
+
