@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dr. Cohen Dental Clinic</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@300;400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:auto}
+body{background:#06020a;color:#f0eaf4;font-family:'Inter',sans-serif;overflow-x:hidden}
+
+/* Sketchfab viewer — fixed background */
+#sf-wrap{position:fixed;top:0;left:0;width:100%;height:100%;z-index:0;pointer-events:none}
+#sf-wrap iframe{width:100%;height:100%;border:none;pointer-events:none}
+/* Dark overlay to make text readable */
+#overlay{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;
+  background:radial-gradient(ellipse at center, rgba(6,2,10,0.15) 0%, rgba(6,2,10,0.65) 100%)}
+
+nav{position:fixed;top:0;left:0;right:0;z-index:100;padding:28px 60px;display:flex;justify-content:space-between;align-items:center;background:linear-gradient(to bottom,rgba(6,2,10,0.85),transparent)}
+.logo{font-family:'Cormorant Garamond',serif;font-size:17px;font-weight:600;letter-spacing:3px}
+.nav-links{display:flex;gap:36px}
+.nav-links a{font-size:11px;letter-spacing:.15em;text-transform:uppercase;color:rgba(240,234,244,.4);text-decoration:none;cursor:pointer;transition:color .3s}
+.nav-links a:hover{color:#c084fc}
+.lang-btn{padding:7px 18px;border:1px solid rgba(192,132,252,.35);color:#c084fc;font-size:11px;cursor:pointer;background:none;font-family:'Inter',sans-serif;transition:all .3s;letter-spacing:.1em}
+.lang-btn:hover{background:#c084fc;color:#06020a}
+
+/* Hero — fixed while model plays */
+#hero{position:fixed;top:0;left:0;width:100%;height:100%;z-index:2;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;pointer-events:none}
+.hero-tag{font-size:10px;letter-spacing:.35em;text-transform:uppercase;color:#c084fc;margin-bottom:28px;text-shadow:0 0 20px rgba(192,132,252,0.5)}
+.hero-h1{font-family:'Cormorant Garamond',serif;font-size:clamp(52px,8vw,118px);font-weight:300;line-height:.88;letter-spacing:-2px;text-shadow:0 2px 40px rgba(0,0,0,0.8)}
+.hero-h1 em{font-style:italic;color:#a78bfa}
+.hero-sub{font-size:11px;letter-spacing:.22em;text-transform:uppercase;color:rgba(240,234,244,.35);margin-top:32px}
+.scroll-cue{position:absolute;bottom:48px;display:flex;flex-direction:column;align-items:center;gap:10px;color:rgba(192,132,252,.6);font-size:10px;letter-spacing:.2em;text-transform:uppercase}
+.scroll-line{width:1px;height:44px;background:linear-gradient(to bottom,#c084fc,transparent);animation:sa 2s ease-in-out infinite}
+@keyframes sa{0%,100%{transform:scaleY(0);transform-origin:top}50%{transform:scaleY(1);transform-origin:top}}
+
+/* Scroll driver — tall spacer */
+#scroll-driver{height:400vh;position:relative;z-index:3}
+
+/* Content sections */
+#content{position:relative;z-index:3;background:#06020a}
+.sec{padding:120px 10vw}
+.s-tag{font-size:10px;letter-spacing:.28em;text-transform:uppercase;color:#c084fc;margin-bottom:18px;display:block}
+.s-title{font-family:'Cormorant Garamond',serif;font-size:clamp(34px,4.5vw,66px);font-weight:300;line-height:1.02;letter-spacing:-1px;margin-bottom:24px}
+.s-text{font-size:15px;line-height:1.95;color:rgba(240,234,244,.44);max-width:520px}
+.purple-bar{width:44px;height:1px;background:#c084fc;margin:28px 0}
+.divider{height:1px;background:linear-gradient(to right,transparent,rgba(192,132,252,.12),transparent);margin:0 10vw}
+.g3{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;background:rgba(192,132,252,.06);margin-top:52px}
+.card{padding:44px 36px;background:#06020a;position:relative;overflow:hidden;transition:background .4s}
+.card-top{position:absolute;top:0;left:0;right:0;height:1px;background:linear-gradient(to right,transparent,#c084fc,transparent);transform:scaleX(0);transition:transform .5s}
+.card:hover{background:#0d0512}.card:hover .card-top{transform:scaleX(1)}
+.card-num{font-family:'Cormorant Garamond',serif;font-size:44px;color:rgba(192,132,252,.1);font-weight:300;margin-bottom:16px}
+.card-name{font-family:'Cormorant Garamond',serif;font-size:21px;font-weight:600;margin-bottom:12px}
+.card-desc{font-size:13px;line-height:1.82;color:rgba(240,234,244,.35)}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:rgba(192,132,252,.05)}
+.stat{padding:52px 24px;background:#06020a;text-align:center}
+.stat-n{font-family:'Cormorant Garamond',serif;font-size:60px;font-weight:300;color:#c084fc;line-height:1;letter-spacing:-2px}
+.stat-l{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:rgba(240,234,244,.2);margin-top:10px}
+.cwrap{display:grid;grid-template-columns:1fr 1fr;gap:80px;margin-top:60px;align-items:start}
+.ci label{display:block;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:#c084fc;margin-bottom:7px}
+.ci p{font-size:15px;color:rgba(240,234,244,.5)}
+.citems{display:flex;flex-direction:column;gap:28px}
+.cta{display:inline-flex;align-items:center;gap:12px;padding:17px 42px;border:1px solid rgba(192,132,252,.35);color:#c084fc;font-size:11px;letter-spacing:.18em;text-transform:uppercase;text-decoration:none;transition:all .4s;background:none;font-family:'Inter',sans-serif;margin-top:32px}
+.cta:hover{background:#c084fc;color:#06020a}
+.fwrap{border:1px solid rgba(192,132,252,.1);padding:40px;display:flex;flex-direction:column;gap:12px}
+.fwrap input,.fwrap textarea{background:rgba(255,255,255,.03);border:1px solid rgba(192,132,252,.1);color:#f0eaf4;padding:14px 16px;font-family:'Inter',sans-serif;font-size:14px;outline:none;transition:border-color .3s}
+.fwrap input:focus,.fwrap textarea:focus{border-color:rgba(192,132,252,.4)}
+.fwrap textarea{resize:none;height:110px}
+.fwrap button{background:#c084fc;color:#06020a;border:none;padding:14px;font-family:'Inter',sans-serif;font-size:11px;font-weight:700;letter-spacing:.15em;text-transform:uppercase;cursor:pointer}
+footer{padding:36px 60px;border-top:1px solid rgba(192,132,252,.07);display:flex;justify-content:space-between;align-items:center}
+.f-logo{font-family:'Cormorant Garamond',serif;font-size:16px;letter-spacing:2px;opacity:.65}
+.f-credit{font-size:11px;color:rgba(240,234,244,.16)}
+.f-credit span{color:#c084fc}
+.reveal{opacity:0;transform:translateY(32px);transition:opacity .9s ease,transform .9s ease}
+.reveal.vis{opacity:1;transform:none}
+@media(max-width:768px){nav{padding:18px 24px}.nav-links{display:none}.sec{padding:80px 24px}.g3,.cwrap{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}footer{flex-direction:column;gap:12px;text-align:center}}
+</style>
+</head>
+<body>
+
+<!-- Real Sketchfab model as background -->
+<div id="sf-wrap">
+  <iframe id="sf-iframe"
+    src="https://sketchfab.com/models/424384a3b772430e8aee44dc67bae04c/embed?autostart=1&ui_controls=0&ui_infos=0&ui_inspector=0&ui_stop=0&ui_watermark=0&ui_watermark_link=0&transparent=0&autospin=0&preload=1&dnt=1"
+    allow="autoplay; fullscreen; xr-spatial-tracking"
+    allowfullscreen>
+  </iframe>
+</div>
+<div id="overlay"></div>
+
+<nav>
+  <div class="logo">DR. COHEN DENTAL</div>
+  <div class="nav-links">
+    <a onclick="document.getElementById('about').scrollIntoView({behavior:'smooth'})">About</a>
+    <a onclick="document.getElementById('services').scrollIntoView({behavior:'smooth'})">Services</a>
+    <a onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Contact</a>
+  </div>
+  <button class="lang-btn" id="langBtn" onclick="toggleLang()">עברית</button>
+</nav>
+
+<div id="hero">
+  <div class="hero-tag" id="hTag">Tel Aviv · Advanced Dentistry</div>
+  <h1 class="hero-h1"><span id="hW1">Your Perfect</span><br><em id="hW2">Smile Awaits</em></h1>
+  <p class="hero-sub" id="hSub">Scroll to explore</p>
+  <div class="scroll-cue"><div class="scroll-line"></div>Scroll</div>
+</div>
+
+<div id="scroll-driver"></div>
+
+<div id="content">
+  <div class="sec" id="about">
+    <span class="s-tag reveal">About The Clinic</span>
+    <h2 class="s-title reveal">Advanced Care<br>For Every Smile</h2>
+    <div class="purple-bar reveal"></div>
+    <p class="s-text reveal">Dr. Sarah Cohen Dental Clinic blends cutting-edge technology with a calm, patient-first approach. Over 15 years serving Tel Aviv — from routine check-ups to complete smile transformations.</p>
+  </div>
+  <div class="divider"></div>
+  <div class="sec" id="services" style="padding-top:0">
+    <span class="s-tag reveal">Treatments</span>
+    <h2 class="s-title reveal">Our Services</h2>
+    <div class="g3">
+      <div class="card reveal"><div class="card-top"></div><div class="card-num">I</div><div class="card-name">Teeth Whitening</div><div class="card-desc">In-clinic whitening that lifts stains and brightens your smile by several shades in a single session.</div></div>
+      <div class="card reveal"><div class="card-top"></div><div class="card-num">II</div><div class="card-name">Dental Implants</div><div class="card-desc">Permanent, natural-feeling implants that restore your smile, bite, and confidence for life.</div></div>
+      <div class="card reveal"><div class="card-top"></div><div class="card-num">III</div><div class="card-name">Invisalign</div><div class="card-desc">Clear aligners that straighten your teeth discreetly and comfortably, with no wires or brackets.</div></div>
+    </div>
+  </div>
+  <div class="divider" style="margin-top:80px"></div>
+  <div class="sec" style="padding-top:80px;padding-bottom:80px">
+    <div class="stats">
+      <div class="stat reveal"><div class="stat-n">15+</div><div class="stat-l">Years Experience</div></div>
+      <div class="stat reveal"><div class="stat-n">3k+</div><div class="stat-l">Patients Treated</div></div>
+      <div class="stat reveal"><div class="stat-n">4.9★</div><div class="stat-l">Google Rating</div></div>
+      <div class="stat reveal"><div class="stat-n">#1</div><div class="stat-l">In Tel Aviv</div></div>
+    </div>
+  </div>
+  <div class="divider"></div>
+  <div class="sec" id="contact">
+    <span class="s-tag reveal">Book An Appointment</span>
+    <h2 class="s-title reveal">Get In Touch</h2>
+    <div class="cwrap reveal">
+      <div>
+        <div class="citems">
+          <div class="ci"><label>Phone</label><p>03-555-1234</p></div>
+          <div class="ci"><label>Address</label><p>Dizengoff St 45, Tel Aviv-Yafo</p></div>
+          <div class="ci"><label>Hours</label><p>Sun–Thu 09:00–19:00 · Fri 09:00–14:00</p></div>
+        </div>
+        <a href="tel:03-555-1234" class="cta">Call To Book →</a>
+      </div>
+      <div class="fwrap">
+        <div style="font-family:'Cormorant Garamond',serif;font-size:22px;margin-bottom:20px;font-weight:400">Send a Message</div>
+        <input placeholder="Full Name">
+        <input placeholder="Phone or Email">
+        <textarea placeholder="How can we help you?"></textarea>
+        <button>Send Message</button>
+      </div>
+    </div>
+  </div>
+  <footer>
+    <div class="f-logo">DR. COHEN DENTAL</div>
+    <div class="f-credit">Built by <span>EliteSite Architects</span></div>
+  </footer>
+</div>
+
+<script>
+const TR={
+  en:{tag:'Tel Aviv · Advanced Dentistry',w1:'Your Perfect',w2:'Smile Awaits',sub:'Scroll to explore',btn:'עברית'},
+  he:{tag:'תל אביב · רפואת שיניים מתקדמת',w1:'החיוך המושלם',w2:'מחכה לך',sub:'גלול לגלות',btn:'English'}
+};
+let lang='en';
+function toggleLang(){
+  lang=lang==='en'?'he':'en';
+  const t=TR[lang];
+  document.documentElement.dir=lang==='he'?'rtl':'ltr';
+  document.getElementById('hTag').textContent=t.tag;
+  document.getElementById('hW1').textContent=t.w1;
+  document.getElementById('hW2').textContent=t.w2;
+  document.getElementById('hSub').textContent=t.sub;
+  document.getElementById('langBtn').textContent=t.btn;
+}
+
+// Sketchfab API — control camera on scroll
+const iframe = document.getElementById('sf-iframe');
+let client = null;
+let sfReady = false;
+
+window.addEventListener('message', function(e) {
+  if (e.data && e.data.type === 'SKETCHFAB_API_READY') {
+    sfReady = true;
+  }
+});
+
+// Load Sketchfab API
+const sfScript = document.createElement('script');
+sfScript.src = 'https://static.sketchfab.com/api/sketchfab-viewer-1.12.1.js';
+sfScript.onload = function() {
+  client = new window.Sketchfab(iframe);
+  client.init('424384a3b772430e8aee44dc67bae04c', {
+    success: function(api) {
+      api.start();
+      api.addEventListener('viewerready', function() {
+        sfReady = true;
+        window._sfApi = api;
+
+        // Initial camera — front view, slightly zoomed out
+        api.setCameraLookAt(
+          [0, 0, 25],   // eye position
+          [0, 0, 0],    // target
+          1.0,
+          function() {}
+        );
+      });
+    },
+    error: function() { console.log('Sketchfab failed to load'); },
+    ui_controls: 0,
+    ui_infos: 0,
+    ui_watermark: 0,
+    autostart: 1,
+    transparent: 0,
+  });
+};
+document.head.appendChild(sfScript);
+
+// Scroll handler — zoom into teeth
+let heroOpacity = 1;
+window.addEventListener('scroll', function() {
+  const driver = document.getElementById('scroll-driver');
+  const rect = driver.getBoundingClientRect();
+  const scrolled = Math.max(0, -rect.top);
+  const progress = Math.min(scrolled / rect.height, 1);
+
+  // Fade hero text
+  heroOpacity = Math.max(0, 1 - progress * 4);
+  document.getElementById('hero').style.opacity = heroOpacity;
+
+  // Move Sketchfab camera — zoom in from front
+  if (window._sfApi && progress > 0) {
+    // Zoom from z=25 down to z=2 (right into the teeth)
+    const z = 25 - progress * 23;
+    const y = progress * 2; // slight upward tilt to look down throat
+    window._sfApi.setCameraLookAt(
+      [0, y, Math.max(z, 1.5)],
+      [0, 0, 0],
+      0.3,
+      function() {}
+    );
+  }
+});
+
+// Hero entrance
+gsap.registerPlugin(ScrollTrigger);
+gsap.timeline({delay:.5})
+  .from('#hTag',{opacity:0,y:16,duration:.9,ease:'power3.out'})
+  .from('.hero-h1',{opacity:0,y:50,duration:1.1,ease:'power4.out'},'-=.4')
+  .from('#hSub',{opacity:0,duration:.8},'-=.3')
+  .from('.scroll-cue',{opacity:0,duration:.6},'-=.2');
+
+const obs=new IntersectionObserver(e=>{e.forEach(el=>{if(el.isIntersecting)el.target.classList.add('vis');});},{threshold:.1});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+</body>
+</html>
